@@ -10,7 +10,6 @@ conn = pymysql.connect(
     port=3306,
     user='root',
     password=SECRET_DB_PW,
-    db='PMS',
     charset='utf8mb4'
 )
 
