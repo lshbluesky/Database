@@ -24,13 +24,16 @@ def db_connect():
         password=password,
         charset='utf8mb4'
     )
+    return connection
+
+# db_session = db_connect()
 
 # try: # DB에 접속해 테이블 리스트 출력
-#     with connection.cursor() as cursor:
+#     with db_session.cursor() as cursor:
 #         cursor.execute("SHOW DATABASES")
 #         databases = cursor.fetchall()
 #         print("Databases:")
 #         for db in databases:
 #             print(db[0])
 # finally:
-#     connection.close()
+#     db_session.close()
