@@ -1,7 +1,6 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    생성자 : 이상훈
     마지막 수정 날짜 : 2024/10/30
 """
 
