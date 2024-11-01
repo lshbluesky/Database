@@ -6,7 +6,7 @@
 
 import pymysql
 from mysql_connection import db_connect
-import account
+from account import *
 
 # 사용자(학생) 생성 함수
 def insert_user(payload, Token):
