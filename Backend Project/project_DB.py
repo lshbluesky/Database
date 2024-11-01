@@ -6,7 +6,7 @@
 
 import pymysql
 from mysql_connection import db_connect
-import project
+from project import *
 
 # 프로젝트 생성 함수
 def init_project(payload):
