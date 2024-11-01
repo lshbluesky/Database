@@ -105,7 +105,7 @@ def delete_project(pid):
         cur.close()
         connection.close()
 
-# 프로젝트 사용자 추가(팀원 초대) 함수
+# 프로젝트 참여자 추가(팀원 초대) 함수
 # 주의사항 : 초대하려는 사용자(학생)는 회원가입이 이미 완료되어 있어야 한다
 def add_project_user(pid, univ_id, role):
     connection = db_connect()
@@ -126,7 +126,7 @@ def add_project_user(pid, univ_id, role):
         cur.close()
         connection.close()
 
-# 프로젝트 사용자 수정(팀원 정보 수정) 함수
+# 프로젝트 참여자 수정(팀원 정보 수정) 함수
 def edit_project_user(id, name, email, univ_id, pid, role):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -147,7 +147,7 @@ def edit_project_user(id, name, email, univ_id, pid, role):
         cur.close()
         connection.close()
 
-# 프로젝트 사용자 삭제(팀원 퇴출) 함수
+# 프로젝트 참여자 삭제(팀원 퇴출) 함수
 def delete_project_user(pid, univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -163,7 +163,7 @@ def delete_project_user(pid, univ_id):
         cur.close()
         connection.close()
 
-# 프로젝트 사용자(팀원 조회) 조회 함수
+# 프로젝트 참여자(팀원 조회) 조회 함수
 def fetch_project_user(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
