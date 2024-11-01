@@ -1,11 +1,11 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2024/10/30
+    마지막 수정 날짜 : 2024/11/01
 """
 
 import pymysql
-import mysql_connection
+from mysql_connection import db_connect
 import account
 
 # 사용자(학생) 생성 함수
