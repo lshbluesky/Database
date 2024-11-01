@@ -79,7 +79,6 @@ def fetch_project_info(univ_id):
         result = cur.fetchall()
         return result
     except Exception as e:
-        connection.rollback()
         return False
     finally:
         cur.close()
@@ -159,6 +158,22 @@ def delete_project_user(pid, univ_id):
         return True
     except Exception as e:
         connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 사용자(팀원 조회) 조회 함수
+def fetch_project_user(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        # 프로젝트 참여 테이블에서 프로젝트 번호로 해당 프로젝트에 참여하고 있는 모든 팀원 조회
+        cur.execute("SELECT * FROM project_user WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
         return False
     finally:
         cur.close()
