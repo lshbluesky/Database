@@ -14,7 +14,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import mysql_connection  # MySQL 연결 기능 수행
-import account_DB
+from account_DB import *
 
 router = APIRouter()
 
