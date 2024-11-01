@@ -178,3 +178,22 @@ def fetch_project_user(pid):
     finally:
         cur.close()
         connection.close()
+
+# 프로젝트의 중요 정보를 수정할 때 사용자의 권한(PM 권한)을 확인하는 함수
+def validate_pm_permission(pid, univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT permission FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
+        row = cur.fetchone()
+
+        if row['permission'] == 1:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
