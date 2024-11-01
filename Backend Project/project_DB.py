@@ -13,12 +13,16 @@ def init_project(payload):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
+    # payload.pperiod의 값을 split() 메소드로 쪼개기
+    total_period = payload.pperiod
+    p_startD, p_endD = total_period.split('-')
+
     try:
         add_project = """
         INSERT INTO project(p_name, p_content, p_method, p_memcount, p_start, p_end, dno)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, payload.pperiod, payload.pperiod, 10))
+        cur.execute(add_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, 10))
         connection.commit()
         return True
     except Exception as e:
