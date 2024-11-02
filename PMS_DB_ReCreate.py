@@ -17,6 +17,6 @@ conn = pymysql.connect(
 cur = conn.cursor(pymysql.cursors.DictCursor)
 cur.execute('DROP DATABASE PMS')
 conn.commit()
-cur.execute('CREATE DATABASE PMS')
+cur.execute('CREATE DATABASE PMS DEFAULT CHARACTER SET utf8mb4')
 conn.commit()
 conn.close()

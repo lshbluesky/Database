@@ -26,8 +26,8 @@ s_email = 'gildong@naver.com'
 dno = 10
 
 add_student = """
-INSERT INTO student (s_no, s_id, s_pw, s_name, s_email, s_time_join, s_time_edit, s_time_delete, dno)
-VALUES (%s, %s, %s, %s, %s, NOW(), NULL, NULL, %s)
+INSERT INTO student (s_no, s_id, s_pw, s_name, s_email, dno)
+VALUES (%s, %s, %s, %s, %s, %s)
 """
 cur.execute(add_student, (s_no, s_id, s_pw, s_name, s_email, dno))
 conn.commit()
@@ -40,7 +40,7 @@ s_name = '홍길동'
 s_email = 'gildong@naver.com'
 dno = 10
 
-edit_student = "UPDATE student SET s_id=%s, s_pw=%s, s_name=%s, s_email=%s, s_time_edit=NOW(), dno=%s WHERE s_no=%s"
+edit_student = "UPDATE student SET s_id=%s, s_pw=%s, s_name=%s, s_email=%s, dno=%s WHERE s_no=%s"
 cur.execute(edit_student, (s_id, s_pw, s_name, s_email, dno, s_no))
 conn.commit()
 
