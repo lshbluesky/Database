@@ -28,6 +28,7 @@ def fetch_task_info(univ_id):
         connection.close()
 
 # 업무를 추가하는 함수
+# 업무를 추가할 때 프로젝트 번호와 학번도 매개 변수로 받아야 한다 (work 테이블의 p_no, s_no 컬럼 모두 NOT NULL)
 def add_task_info(tname, tperson, tstart, tend, pid, univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -53,7 +54,7 @@ def add_task_info(tname, tperson, tstart, tend, pid, univ_id):
         connection.close()
 
 # 업무를 수정하는 함수
-# 수정할 업무에 해당하는 업무 번호도 같이 받아야 하며, 그렇지 않으면 모든 업무가 같은 내용으로 수정되는 문제가 발생
+# 수정할 업무에 해당하는 업무 번호도 매개 변수로 같이 받아야 하며, 그렇지 않으면 모든 업무가 같은 내용으로 수정되는 문제가 발생
 def update_task_info(tname, tperson, tstart, tend, tfinish, w_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
