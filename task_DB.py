@@ -9,15 +9,15 @@ from mysql_connection import db_connect
 from task import *
 
 # 업무를 조회하는 함수
-# WHERE 절의 조건에 프로젝트 번호와 학번 2개의 조건을 줘야 한다
-# 만약, 한 명의 사용자가 2개 이상의 프로젝트에 참여하고 있다면, 다른 프로젝트의 업무도 같이 조회될 수 있음
-def fetch_task_info(univ_id):
+# 프로젝트 번호와 학번을 매개 변수로 받고, WHERE 절의 조건으로 필터링해야 한다
+# 만약, 학번으로만 조회할 경우, 한 명의 사용자가 2개 이상의 프로젝트에 참여하고 있다면, 다른 프로젝트의 업무도 같이 조회될 수 있음
+def fetch_task_info(pid, univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        load_work = "SELECT w_no, w_name, w_person, w_start, w_end, w_checked FROM work WHERE s_no = %s"
-        cur.execute(load_work, (univ_id,))
+        load_work = "SELECT w_no, w_name, w_person, w_start, w_end, w_checked FROM work WHERE p_no = %s AND s_no = %s"
+        cur.execute(load_work, (pid, univ_id))
         result = cur.fetchall()
         # task.py 에서 딕셔너리 키를 DB의 컬럼 이름으로 접근하도록 수정 필요
         return result
