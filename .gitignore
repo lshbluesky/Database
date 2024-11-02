@@ -3,3 +3,8 @@
 __pycache__/
 Backend\ Project/
 Database\ Project/
+account.py
+main.py
+output.py
+project.py
+task.py
