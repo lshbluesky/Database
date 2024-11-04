@@ -217,6 +217,82 @@ def fetch_one_reqspec(doc_r_no):
 
 # ------------------------------ 테스트 케이스 ------------------------------ #
 # 테스트 케이스를 추가하는 함수
+def add_testcase(tcname, tcstart, tcend, tcpass, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_doc_test = """
+        INSERT INTO doc_test(doc_t_name, doc_t_start, doc_t_end, doc_t_pass, p_no)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        cur.execute(add_doc_test, (tcname, tcstart, tcend, tcpass, pid))
+        connection.commit()
+
+        cur.execute("SELECT * FROM doc_test WHERE p_no = %s ORDER BY doc_t_no DESC", (pid,))
+        row = cur.fetchone()
+        return row['doc_t_no']
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 테스트 케이스를 수정하는 함수
+# 수정하려는 테스트 케이스의 내용과 테스트 번호를 매개 변수로 받는다
+def edit_testcase(tcname, tcstart, tcend, tcpass, doc_t_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        edit_doc_test = """
+        UPDATE doc_test
+        SET doc_t_name = %s,
+            doc_t_start = %s,
+            doc_t_end = %s,
+            doc_t_pass = %s
+        WHERE doc_t_no = %s
+        """
+        cur.execute(edit_doc_test, (tcname, tcstart, tcend, tcpass, doc_t_no))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 테스트 케이스를 삭제하는 함수
+# 삭제하려는 테스트 케이스의 테스트 번호를 매개 변수로 받는다
+def delete_testcase(doc_t_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("DELETE FROM doc_test WHERE doc_t_no = %s", (doc_t_no,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 테스트 케이스를 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_all_testcase(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_test WHERE p_no = %s ORDER BY doc_t_no ASC", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
