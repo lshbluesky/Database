@@ -123,10 +123,10 @@ def add_reqspec(feature_name, description, priority, non_functional_requirement_
 
     try:
         add_doc_require = """
-        INSERT INTO doc_require(doc_r_f_name, doc_r_f_content, doc_r_nf_name, doc_r_nf_content, doc_r_s_name, doc_r_s_content, doc_r_date, p_no)
-        VALUES (%s, %s, %s, %s, %s, %s, NOW(), %s)
+        INSERT INTO doc_require(doc_r_f_name, doc_r_f_content, doc_r_f_priority, doc_r_nf_name, doc_r_nf_content, doc_r_nf_priority, doc_r_s_name, doc_r_s_content, doc_r_date, p_no)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW(), %s)
         """
-        cur.execute(add_doc_require, (feature_name, description, non_functional_requirement_name, non_functional_description, system_item, system_description, pid))
+        cur.execute(add_doc_require, (feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, pid))
         connection.commit()
 
         cur.execute("SELECT * FROM doc_require WHERE p_no = %s ORDER BY doc_r_no DESC", (pid,))
@@ -141,7 +141,7 @@ def add_reqspec(feature_name, description, priority, non_functional_requirement_
 
 # 요구사항 명세서를 수정하는 함수
 # 수정하려는 요구사항 명세서의 내용과 산출물 번호를 매개 변수로 받는다
-def edit_reqspec(feature_name, description, non_functional_requirement_name, non_functional_description, system_item, system_description, doc_r_no):
+def edit_reqspec(feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, doc_r_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -150,13 +150,15 @@ def edit_reqspec(feature_name, description, non_functional_requirement_name, non
         UPDATE doc_require
         SET doc_r_f_name = %s,
             doc_r_f_content = %s,
+            doc_r_f_priority = %s,
             doc_r_nf_name = %s,
             doc_r_nf_content = %s,
+            doc_r_nf_priority = %s,
             doc_r_s_name = %s,
             doc_r_s_content = %s
         WHERE doc_r_no = %s
         """
-        cur.execute(edit_doc_require, (feature_name, description, non_functional_requirement_name, non_functional_description, system_item, system_description, doc_r_no))
+        cur.execute(edit_doc_require, (feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, doc_r_no))
         connection.commit()
         return True
     except Exception as e:
