@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/11/03
+    마지막 수정 날짜 : 2024/11/04
 """
 
 import pymysql
