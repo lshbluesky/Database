@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/11/04
+    마지막 수정 날짜 : 2024/11/05
 """
 
 import pymysql
@@ -10,14 +10,206 @@ from output import *
 
 # ------------------------------ 프로젝트 개요서 ------------------------------ #
 # 프로젝트 개요서 간단본을 추가하는 함수
+# 추가하려는 프로젝트 개요서 간단본의 내용과 프로젝트 번호를 매개 변수로 받는다
+def add_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcomes, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_doc_summary = """
+        INSERT INTO doc_summary(doc_s_name, doc_s_team, doc_s_overview, doc_s_start, doc_s_end, doc_s_range, doc_s_outcomes, doc_s_date, p_no)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), %s)
+        """
+        cur.execute(add_doc_summary, (pname, pteam, psummary, pstart, pend, prange, poutcomes, pid))
+        connection.commit()
+
+        cur.execute("SELECT * FROM doc_summary WHERE p_no = %s ORDER BY doc_s_no DESC", (pid,))
+        row = cur.fetchone()
+        return row['doc_s_no']
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트 개요서 간단본을 수정하는 함수
+# 수정하려는 프로젝트 개요서 간단본의 내용과 산출물 번호를 매개 변수로 받는다
+def edit_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcomes, doc_s_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        edit_doc_summary = """
+        UPDATE doc_summary
+        SET doc_s_name = %s,
+            doc_s_team = %s,
+            doc_s_overview = %s,
+            doc_s_start = %s,
+            doc_s_end = %s,
+            doc_s_range = %s,
+            doc_s_outcomes = %s
+        WHERE doc_s_no = %s
+        """
+        cur.execute(edit_doc_summary, (pname, pteam, psummary, pstart, pend, prange, poutcomes, doc_s_no))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트 개요서 간단본을 삭제하는 함수
-# 프로젝트 개요서 간단본을 조회하는 함수
+# 삭제하려는 프로젝트 개요서 간단본의 산출물 번호를 매개 변수로 받는다
+def delete_summary_document(doc_s_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("DELETE FROM doc_summary WHERE doc_s_no = %s", (doc_s_no,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 개요서 간단본을 모두 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_all_summary_documents(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_summary WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 개요서 간단본을 하나만 조회하는 함수
+# 조회하려는 프로젝트 개요서 간단본의 산출물 번호를 매개 변수로 받는다
+def fetch_one_summary_document(doc_s_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_summary WHERE doc_s_no = %s", (doc_s_no,))
+        result = cur.fetchone()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
 
 # 프로젝트 개요서 상세본을 추가하는 함수
+# 추가하려는 프로젝트 개요서 상세본의 내용과 프로젝트 번호를 매개 변수로 받는다
+def add_overview_document(poverview, pteam, pgoals, pstart, pend, prange, pstack, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_doc_overview = """
+        INSERT INTO doc_summary(doc_s_overview, doc_s_team, doc_s_goals, doc_s_start, doc_s_end, doc_s_range, doc_s_stack, doc_s_date, p_no)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), %s)
+        """
+        cur.execute(add_doc_overview, (poverview, pteam, pgoals, pstart, pend, prange, pstack, pid))
+        connection.commit()
+
+        cur.execute("SELECT * FROM doc_summary WHERE p_no = %s ORDER BY doc_s_no DESC", (pid,))
+        row = cur.fetchone()
+        return row['doc_s_no']
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트 개요서 상세본을 수정하는 함수
+# 수정하려는 프로젝트 개요서 상세본의 내용과 산출물 번호를 매개 변수로 받는다
+def edit_overview_document(poverview, pteam, pgoals, pstart, pend, prange, pstack, doc_s_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        edit_doc_overview = """
+        UPDATE doc_summary
+        SET doc_s_overview = %s,
+            doc_s_team = %s,
+            doc_s_goals = %s,
+            doc_s_start = %s,
+            doc_s_end = %s,
+            doc_s_range = %s,
+            doc_s_stack = %s
+        WHERE doc_s_no = %s
+        """
+        cur.execute(edit_doc_overview, (poverview, pteam, pgoals, pstart, pend, prange, pstack, doc_s_no))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트 개요서 상세본을 삭제하는 함수
-# 프로젝트 개요서 상세본을 조회하는 함수
+# 삭제하려는 프로젝트 개요서 상세본의 산출물 번호를 매개 변수로 받는다
+def delete_overview_document(doc_s_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("DELETE FROM doc_summary WHERE doc_s_no = %s", (doc_s_no,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 개요서 상세본을 모두 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_all_overview_documents(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_summary WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 개요서 상세본을 하나만 조회하는 함수
+# 조회하려는 프로젝트 개요서 상세본의 산출물 번호를 매개 변수로 받는다
+def fetch_one_overview_document(doc_s_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_summary WHERE doc_s_no = %s", (doc_s_no,))
+        result = cur.fetchone()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
 
 # ------------------------------ 회의록 ------------------------------ #
 # 회의록을 추가하는 함수
