@@ -85,24 +85,8 @@ def fetch_all_summary_documents(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT * FROM doc_summary WHERE p_no = %s", (pid,))
+        cur.execute("SELECT * FROM doc_summary WHERE doc_s_outcomes IS NOT NULL AND p_no = %s", (pid,))
         result = cur.fetchall()
-        return result
-    except Exception as e:
-        return False
-    finally:
-        cur.close()
-        connection.close()
-
-# 프로젝트 개요서 간단본을 하나만 조회하는 함수
-# 조회하려는 프로젝트 개요서 간단본의 산출물 번호를 매개 변수로 받는다
-def fetch_one_summary_document(doc_s_no):
-    connection = db_connect()
-    cur = connection.cursor(pymysql.cursors.DictCursor)
-
-    try:
-        cur.execute("SELECT * FROM doc_summary WHERE doc_s_no = %s", (doc_s_no,))
-        result = cur.fetchone()
         return result
     except Exception as e:
         return False
@@ -186,7 +170,7 @@ def fetch_all_overview_documents(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT * FROM doc_summary WHERE p_no = %s", (pid,))
+        cur.execute("SELECT * FROM doc_summary WHERE doc_s_stack IS NOT NULL AND p_no = %s", (pid,))
         result = cur.fetchall()
         return result
     except Exception as e:
@@ -195,9 +179,9 @@ def fetch_all_overview_documents(pid):
         cur.close()
         connection.close()
 
-# 프로젝트 개요서 상세본을 하나만 조회하는 함수
-# 조회하려는 프로젝트 개요서 상세본의 산출물 번호를 매개 변수로 받는다
-def fetch_one_overview_document(doc_s_no):
+# 프로젝트 개요서 간단본 또는 상세본 하나만 조회하는 함수
+# 조회하려는 프로젝트 개요서 간단본 또는 상세본의 산출물 번호를 매개 변수로 받는다
+def fetch_one_summary_document(doc_s_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
