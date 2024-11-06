@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/11/05
+    마지막 수정 날짜 : 2024/11/06
 """
 
 import pymysql
@@ -493,6 +493,114 @@ def fetch_all_testcase(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# ------------------------------ 기타 산출물 ------------------------------ #
+# 기타 산출물을 추가하는 함수
+# 추가하려는 기타 산출물의 산출물 고유 번호, 파일 이름, 파일 경로, 프로젝트 번호를 매개 변수로 받는다
+def add_other_document(file_unique_id, file_name, file_path, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_doc_other = """
+        INSERT INTO doc_other (file_no, file_name, file_path, file_date, p_no)
+        VALUES (%s, %s, %s, NOW(), %s)
+        """
+        cur.execute(add_doc_other, (file_unique_id, file_name, file_path, pid))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 기타 산출물을 삭제하는 함수
+# 삭제하려는 기타 산출물의 산출물 고유 번호를 매개 변수로 받는다
+def delete_other_document(file_unique_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("DELETE FROM doc_other WHERE file_no = %s", (file_unique_id,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 기타 산출물의 목록을 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_all_other_documents(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_other WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 기타 산출물의 첨부 파일 경로를 조회하여 반환하는 함수
+# 산출물 고유 번호를 매개 변수로 받는다
+def fetch_file_path(file_unique_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT file_path FROM doc_other WHERE file_no = %s", (file_unique_id,))
+        result = cur.fetchone()
+        if result:
+            return result['file_path']
+        else:
+            return False
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 기타 산출물의 첨부 파일 경로를 수정하는 함수
+# 산출물 고유 번호와 새로 수정할 파일 경로를 매개 변수로 받는다
+def edit_file_path(file_unique_id, new_file_path):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE doc_other SET file_path = %s WHERE file_no = %s", (new_file_path, file_unique_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 기타 산출물의 첨부 파일 이름을 수정하는 함수
+# 산출물 고유 번호와 새로 수정할 파일 이름을 매개 변수로 받는다
+def edit_file_name(file_unique_id, new_file_name):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE doc_other SET file_name = %s WHERE file_no = %s", (new_file_name, file_unique_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
         return False
     finally:
         cur.close()
