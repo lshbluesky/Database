@@ -29,7 +29,7 @@ CREATE TABLE project_user (
 );
 
 CREATE TABLE doc_other (
- file_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ file_no INT NOT NULL PRIMARY KEY,
  file_name VARCHAR(300) NOT NULL,
  file_path VARCHAR(1000) NOT NULL,
  file_date DATETIME NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE progress (
 );
 
 CREATE TABLE project (
- p_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ p_no INT NOT NULL PRIMARY KEY,
  p_name VARCHAR(300) NOT NULL,
  p_content TEXT NOT NULL,
  p_method VARCHAR(20) NOT NULL,
@@ -83,12 +83,14 @@ CREATE TABLE dept (
 
 CREATE TABLE doc_require (
  doc_r_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
- doc_r_f_name TEXT NOT NULL,
- doc_r_f_content TEXT NOT NULL,
- doc_r_nf_name TEXT NOT NULL,
- doc_r_nf_content TEXT NOT NULL,
- doc_r_s_name TEXT NOT NULL,
- doc_r_s_content TEXT NOT NULL,
+ doc_r_f_name TEXT NULL,
+ doc_r_f_content TEXT NULL,
+ doc_r_f_priority TEXT NULL,
+ doc_r_nf_name TEXT NULL,
+ doc_r_nf_content TEXT NULL,
+ doc_r_nf_priority TEXT NULL,
+ doc_r_s_name TEXT NULL,
+ doc_r_s_content TEXT NULL,
  doc_r_date DATE NOT NULL,
  doc_r_path VARCHAR(1000) NULL,
  p_no INT NOT NULL
@@ -109,12 +111,16 @@ CREATE TABLE doc_meeting (
 
 CREATE TABLE doc_summary (
  doc_s_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
- doc_s_title VARCHAR(300) NOT NULL,
- doc_s_content TEXT NOT NULL,
- doc_s_goal TEXT NOT NULL,
- doc_s_member TEXT NOT NULL,
+ doc_s_name VARCHAR(300) NULL,
+ doc_s_overview TEXT NULL,
+ doc_s_goals TEXT NULL,
+ doc_s_range TEXT NULL,
+ doc_s_outcomes TEXT NULL,
+ doc_s_team TEXT NULL,
+ doc_s_stack TEXT NULL,
  doc_s_start DATE NOT NULL,
  doc_s_end DATE NOT NULL,
+ doc_s_date DATE NOT NULL,
  doc_s_path VARCHAR(1000) NULL,
  p_no INT NOT NULL
 );
@@ -130,9 +136,9 @@ CREATE TABLE doc_test (
 
 CREATE TABLE doc_report (
  doc_rep_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
- doc_rep_title TEXT NOT NULL,
- doc_rep_writer TEXT NOT NULL,
+ doc_rep_name TEXT NOT NULL,
  doc_rep_content TEXT NOT NULL,
+ doc_rep_writer TEXT NOT NULL,
  doc_rep_date DATE NOT NULL,
  doc_rep_path VARCHAR(1000) NULL,
  p_no INT NOT NULL

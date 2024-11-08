@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/01
+    마지막 수정 날짜 : 2024/11/05
 """
 
 import pymysql
@@ -9,7 +9,8 @@ from mysql_connection import db_connect
 from project import *
 
 # 프로젝트 생성 함수
-def init_project(payload):
+# 생성하려는 프로젝트의 내용과 프로젝트 고유 번호를 매개 변수로 받는다
+def init_project(payload, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -19,10 +20,10 @@ def init_project(payload):
 
     try:
         add_project = """
-        INSERT INTO project(p_name, p_content, p_method, p_memcount, p_start, p_end, dno)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, dno)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, 10))
+        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, 10))
         connection.commit()
         return True
     except Exception as e:
@@ -33,6 +34,7 @@ def init_project(payload):
         connection.close()
 
 # 프로젝트 수정 함수
+# 수정하려는 프로젝트의 내용과 프로젝트 고유 번호를 매개 변수로 받는다 (pid는 payload에 포함되어 있음)
 def edit_project(payload):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -64,6 +66,7 @@ def edit_project(payload):
         connection.close()
 
 # 프로젝트 정보 조회 함수
+# 학생의 학번을 매개 변수로 받아서 해당 학생이 참여하고 있는 모든 프로젝트를 조회한다
 def fetch_project_info(univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -85,6 +88,7 @@ def fetch_project_info(univ_id):
         connection.close()
 
 # 프로젝트 삭제 함수
+# 삭제하려는 프로젝트의 번호를 매개 변수로 받는다
 def delete_project(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
