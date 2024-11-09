@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : wbs_DB.py
-    마지막 수정 날짜 : 2024/11/08
+    마지막 수정 날짜 : 2024/11/09
 """
 
 import pymysql
@@ -98,6 +98,23 @@ def delete_one_wbs(progress_no):
 
     try:
         cur.execute("DELETE FROM progress WHERE progress_no = %s", (progress_no,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 진척도(WBS) 항목을 모두 삭제하는 함수
+# 프로젝트 번호를 매개 변수로 받아서 해당 프로젝트에 속하는 모든 전척도 항목을 삭제한다
+def delete_all_wbs(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("DELETE FROM progress WHERE p_no = %s", (pid,))
         connection.commit()
         return True
     except Exception as e:
