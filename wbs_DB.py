@@ -125,6 +125,7 @@ def delete_all_wbs(pid):
         connection.close()
 
 # 진척도(WBS)를 모두 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받아서 해당 프로젝트에 속하는 모든 전척도 항목을 조회한다
 def fetch_all_wbs(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
