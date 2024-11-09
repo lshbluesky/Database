@@ -28,6 +28,34 @@ def add_one_wbs(group1, group2, group3, work, output_file, manager, note, ratio,
         cur.close()
         connection.close()
 
+# 진척도(WBS) 항목 여러 개를 이차원 배열(리스트)로 받아서 한꺼번에 추가(저장)하는 함수
+# 추가하려는 진척도의 항목이 모두 담긴 이차원 배열(리스트) 및 프로젝트 번호를 매개 변수로 받는다
+# add_one_wbs() 함수를 반복문으로 계속 돌리는 것보다 add_multiple_wbs() 함수를 사용하는 것이 DB에 INSERT 하는 속도가 빠르고 효율이 더 좋다
+# wbs_data 이차원 배열(리스트)에 저장되는 값의 예시 :
+# [[group1, group2, group3, work, output_file, manager, note, ratio, start_date, end_date, group1no, group2no, group3no],
+#  [group1, group2, group3, work, output_file, manager, note, ratio, start_date, end_date, group1no, group2no, group3no], ...]
+def add_multiple_wbs(wbs_data, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+    
+    # 각각의 진척도 항목에 프로젝트 번호 pid 추가
+    wbs_data_with_pid = [item + [pid] for item in wbs_data]
+    
+    try:
+        add_multiple_wbs = """
+            INSERT INTO progress (group1, group2, group3, work, output_file, manager, note, ratio, start_date, end_date, group1no, group2no, group3no, p_no)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cur.executemany(add_multiple_wbs, wbs_data_with_pid)
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
 # 진척도(WBS) 항목 한 개를 수정하는 함수
 # 수정하려는 진척도 항목의 진척도 번호를 매개 변수로 받는다
 def edit_one_wbs(group1, group2, group3, work, output_file, manager, note, ratio, start_date, end_date, group1no, group2no, group3no, progress_no):
