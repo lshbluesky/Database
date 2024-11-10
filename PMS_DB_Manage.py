@@ -1,15 +1,15 @@
 """
     CodeCraft PMS Project
     파일명 : PMS_DB_Manage.py
-    마지막 수정 날짜 : 2024/11/04
+    마지막 수정 날짜 : 2024/11/10
 """
 
 import pymysql
-from mysql_connection import db_connect
+from mysql_connection import *
 
 # PMS DB를 생성하는 함수
 def create_pms_db():
-    connection = db_connect()
+    connection = db_root_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
@@ -26,7 +26,7 @@ def create_pms_db():
 # PMS DB를 삭제하는 함수
 # PMS DB 안에 정의되어 있는 모든 테이블과 데이터가 삭제되므로 주의하여 사용
 def drop_pms_db():
-    connection = db_connect()
+    connection = db_root_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
@@ -42,7 +42,7 @@ def drop_pms_db():
 
 # PMS DB를 삭제하고 다시 생성하는 함수
 def recreate_pms_db():
-    connection = db_connect()
+    connection = db_root_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
@@ -61,7 +61,7 @@ def recreate_pms_db():
 # SQL 파일을 읽어서 PMS DB에 테이블을 생성하고 관계 및 제약조건 설정, 학과 정보를 입력하는 함수
 # 주의사항 : PMS DB가 삭제된 상태에서 실행해야 한다 (SQL 파일 안에 PMS DB 생성문이 포함되어 있기 때문)
 def create_pms_db_byFile():
-    conn = db_connect()
+    conn = db_root_connect()
 
     try:
         with conn.cursor() as cur:
