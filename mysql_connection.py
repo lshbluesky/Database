@@ -28,6 +28,20 @@ def db_connect():
     )
     return connection
 
+# MySQL 서버에 로그인하여 접속하는 함수
+# DML 작업을 수행할 DB 대상을 지정하지 않으며, 테이블이 아닌 DB 자체를 생성하거나 삭제하는 등의 경우에 사용한다
+def db_root_connect():
+    load_dotenv()
+    password = os.getenv('DB_PASSWORD')
+
+    connection = pymysql.connect(
+        host='192.168.50.84',
+        user='root',
+        password=password,
+        charset='utf8mb4'
+    )
+    return connection
+
 # db_session = db_connect()
 
 # try: # DB에 접속해 테이블 리스트 출력
