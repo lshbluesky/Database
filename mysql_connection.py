@@ -5,7 +5,7 @@
    생성자   : 김창환                                
                                                                               
    생성일   : 2024/10/14
-   업데이트 : 2024/10/20
+   업데이트 : 2024/11/10
                                                                              
    설명     : API와 DB를 연결하는 기능 정의
 """
@@ -14,6 +14,7 @@ import pymysql
 from dotenv import load_dotenv
 import os
 
+# MySQL 서버에 로그인하고 PMS DB에 접속하는 함수
 def db_connect():
     load_dotenv()
     password = os.getenv('DB_PASSWORD')
@@ -22,7 +23,8 @@ def db_connect():
         host='192.168.50.84',
         user='root',
         password=password,
-        charset='utf8mb4'
+        charset='utf8mb4',
+        database='PMS'
     )
     return connection
 
