@@ -7,27 +7,10 @@
 import pymysql
 from mysql_connection import db_connect
 
-# 관리자(교수)가 학생의 프로젝트 평가 점수를 등록(부여)하는 함수
+# 관리자(교수)가 학생의 프로젝트 평가 점수를 등록(부여)하거나 수정하는 함수
 # 프로젝트 번호, 학번, 성적을 매개 변수로 받는다
 # 주의사항 : 성적은 문자열('A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F')로 입력받아야 한다
 def add_grade(pid, univ_id, grade):
-    connection = db_connect()
-    cur = connection.cursor(pymysql.cursors.DictCursor)
-
-    try:
-        cur.execute("UPDATE project_user SET grade = %s WHERE p_no = %s AND s_no = %s", (grade, pid, univ_id))
-        connection.commit()
-        return True
-    except Exception as e:
-        connection.rollback()
-        return False
-    finally:
-        cur.close()
-        connection.close()
-
-# 관리자(교수)가 학생의 프로젝트 평가 점수를 수정하는 함수
-# 프로젝트 번호, 학번, 성적을 매개 변수로 받는다
-def edit_grade(pid, univ_id, grade):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
