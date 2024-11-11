@@ -10,7 +10,7 @@ from mysql_connection import db_connect
 # 관리자(교수)가 학생의 프로젝트 평가 점수를 등록(부여)하거나 수정하는 함수
 # 프로젝트 번호, 학번, 성적을 매개 변수로 받는다
 # 주의사항 : 성적은 문자열('A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F')로 입력받아야 한다
-def add_grade(pid, univ_id, grade):
+def assign_grade(pid, univ_id, grade):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
