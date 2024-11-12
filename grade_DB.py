@@ -42,7 +42,7 @@ def delete_grade(pid, univ_id):
         cur.close()
         connection.close()
 
-# 어떤 학생의 특정 프로젝트 평가 점수를 한 개 조회하여 반환하는 함수
+# 어떤 학생의 특정 프로젝트 평가(성적) 점수를 한 개 조회하여 반환하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
 def fetch_one_grade(pid, univ_id):
     connection = db_connect()
