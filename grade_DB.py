@@ -57,3 +57,35 @@ def fetch_one_grade(pid, univ_id):
     finally:
         cur.close()
         connection.close()
+
+# 어떤 학생이 참여하고 있는 모든 프로젝트의 평가(성적) 점수를 조회하는 함수
+# 학번을 매개 변수로 받는다
+def fetch_grade_by_student(univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT p_no, s_no, grade FROM project_user WHERE s_no = %s", (univ_id,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
+
+# 특정 프로젝트에 속한 모든 팀원의 평가(성적) 점수를 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_grade_by_project(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT p_no, s_no, grade FROM project_user WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        return False
+    finally:
+        cur.close()
+        connection.close()
