@@ -23,7 +23,8 @@ def insert_user(payload, Token):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [insert_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -44,8 +45,8 @@ def validate_user(id, pw):
         else:
             return False
     except Exception as e:
-        print(f"Error during user validation: {e}")
-        return False
+        print(f"Error [validate_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -61,7 +62,8 @@ def delete_user(id):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -81,7 +83,8 @@ def validate_user_token(id, Token):
         else:
             return False
     except Exception as e:
-        return False
+        print(f"Error [validate_user_token] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
