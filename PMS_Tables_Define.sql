@@ -157,6 +157,8 @@ ALTER TABLE doc_summary ADD CONSTRAINT FK_project_TO_doc_summary_1 FOREIGN KEY (
 ALTER TABLE doc_test ADD CONSTRAINT FK_project_TO_doc_test_1 FOREIGN KEY (p_no) REFERENCES project (p_no);
 ALTER TABLE doc_report ADD CONSTRAINT FK_project_TO_doc_report_1 FOREIGN KEY (p_no) REFERENCES project (p_no);
 
+ALTER TABLE project_user ADD CONSTRAINT CK_project_user_grade CHECK (grade IN ('A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F'));
+
 INSERT INTO dept VALUES(10, '컴퓨터소프트웨어학과');
 INSERT INTO dept VALUES(11, '가상현실학과');
 INSERT INTO dept VALUES(12, '지능정보통신공학과');
