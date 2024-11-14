@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : wbs_DB.py
-    마지막 수정 날짜 : 2024/11/09
+    마지막 수정 날짜 : 2024/11/14
 """
 
 import pymysql
@@ -23,7 +23,8 @@ def add_one_wbs(group1, group2, group3, work, output_file, manager, note, ratio,
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_one_wbs] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -51,7 +52,8 @@ def add_multiple_wbs(wbs_data, pid):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_multiple_wbs] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -85,7 +87,8 @@ def edit_one_wbs(group1, group2, group3, work, output_file, manager, note, ratio
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_one_wbs] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -102,7 +105,8 @@ def delete_one_wbs(progress_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_one_wbs] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -119,7 +123,8 @@ def delete_all_wbs(pid):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_all_wbs] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -135,7 +140,8 @@ def fetch_all_wbs(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_all_wbs] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
