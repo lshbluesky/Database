@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2024/11/13
+    마지막 수정 날짜 : 2024/11/14
 """
 
 import pymysql
@@ -36,7 +36,7 @@ def validate_user(id, pw):
 
     try:
         # 매개 변수로 받은 ID를 통하여 해당 ID, PW 조회
-        cur.execute("SELECT s_id, s_pw FROM student WHERE id = %s", (id,))
+        cur.execute("SELECT s_id, s_pw FROM student WHERE s_id = %s", (id,))
         row = cur.fetchone()
 
         # 만약, 해당 ID 가 존재하고, 로그인 정보가 일치하다면 True 반환
@@ -91,7 +91,7 @@ def validate_user_token(id, Token):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT s_token FROM student WHERE id = %s", (id,))
+        cur.execute("SELECT s_token FROM student WHERE s_id = %s", (id,))
         stored_token = cur.fetchone()
 
         # 매개 변수로 받은 토큰과 DB에 저장된 해당 학생의 토큰 값이 일치하다면 True를 반환
