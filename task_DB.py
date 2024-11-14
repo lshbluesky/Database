@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : task_DB.py
-    마지막 수정 날짜 : 2024/11/02
+    마지막 수정 날짜 : 2024/11/14
 """
 
 import pymysql
@@ -22,7 +22,8 @@ def fetch_task_info(pid, univ_id):
         # task.py 에서 딕셔너리 키를 DB의 컬럼 이름으로 접근하도록 수정 필요
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -48,7 +49,8 @@ def add_task_info(tname, tperson, tstart, tend, pid, univ_id):
         return row['w_no']
     except Exception as e:
         connection.rollback()
-        return None
+        print(f"Error [add_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -74,7 +76,8 @@ def update_task_info(tname, tperson, tstart, tend, tfinish, w_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [update_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -91,7 +94,8 @@ def delete_task_info(w_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
