@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : grade_DB.py
-    마지막 수정 날짜 : 2024/11/12
+    마지막 수정 날짜 : 2024/11/14
 """
 
 import pymysql
@@ -20,7 +20,8 @@ def assign_grade(pid, univ_id, grade):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [assign_grade] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -37,7 +38,8 @@ def delete_grade(pid, univ_id):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_grade] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -53,7 +55,8 @@ def fetch_one_grade(pid, univ_id):
         row = cur.fetchone()
         return row['grade']
     except Exception as e:
-        return False
+        print(f"Error [fetch_one_grade] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -69,7 +72,8 @@ def fetch_grade_by_student(univ_id):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_grade_by_student] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -85,7 +89,8 @@ def fetch_grade_by_project(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_grade_by_project] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
