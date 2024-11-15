@@ -70,12 +70,12 @@ def save_signin_user_token(id, Token):
         connection.close()
 
 # 사용자(학생) 로그아웃 함수
-def signout_user(token):
+def signout_user(Token):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("UPDATE student SET s_token = NULL WHERE s_token = %s", (token,))
+        cur.execute("UPDATE student SET s_token = NULL WHERE s_token = %s", (Token,))
         connection.commit()
         return True
     except Exception as e:
