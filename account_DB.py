@@ -52,13 +52,13 @@ def validate_user(id, pw):
         connection.close()
 
 # 사용자(학생) 로그인 성공 후 토큰(세션)을 DB에 저장하는 함수
-# 로그인 정보가 일치하여 로그인을 성공하면, 생성된 토큰과 로그인한 학생의 ID를 매개 변수로 받아서 해당 사용자의 현재 세션을 유지하기 위한 토큰을 저장한다
-def save_signin_user_token(token, id):
+# 로그인 정보가 일치하여 로그인을 성공하면, 로그인한 학생의 ID와 생성된 토큰을 매개 변수로 받아서 해당 사용자의 현재 세션을 유지하기 위한 토큰을 저장한다
+def save_signin_user_token(id, Token):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("UPDATE student SET s_token = %s WHERE s_id = %s", (token, id))
+        cur.execute("UPDATE student SET s_token = %s WHERE s_id = %s", (Token, id))
         connection.commit()
         return True
     except Exception as e:
