@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/05
+    마지막 수정 날짜 : 2024/11/13
 """
 
 import pymysql
@@ -28,7 +28,8 @@ def init_project(payload, pid):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [init_project] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -60,7 +61,8 @@ def edit_project(payload):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_project] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -82,7 +84,8 @@ def fetch_project_info(univ_id):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_project_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -104,7 +107,8 @@ def delete_project(pid):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_project] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -125,7 +129,8 @@ def add_project_user(pid, univ_id, role):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_project_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -146,7 +151,8 @@ def edit_project_user(id, name, email, univ_id, pid, role):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_project_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -162,7 +168,8 @@ def delete_project_user(pid, univ_id):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_project_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -178,7 +185,8 @@ def fetch_project_user(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_project_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -197,7 +205,8 @@ def validate_pm_permission(pid, univ_id):
         else:
             return False
     except Exception as e:
-        return False
+        print(f"Error [validate_pm_permission] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()

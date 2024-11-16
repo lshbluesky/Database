@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/11/06
+    마지막 수정 날짜 : 2024/11/14
 """
 
 import pymysql
@@ -28,7 +28,8 @@ def add_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcomes
         return row['doc_s_no']
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_summary_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -56,7 +57,8 @@ def edit_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcome
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_summary_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -72,7 +74,8 @@ def fetch_all_summary_documents(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_all_summary_documents] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -96,7 +99,8 @@ def add_overview_document(poverview, pteam, pgoals, pstart, pend, prange, pstack
         return row['doc_s_no']
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_overview_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -124,7 +128,8 @@ def edit_overview_document(poverview, pteam, pgoals, pstart, pend, prange, pstac
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_overview_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -140,7 +145,8 @@ def fetch_all_overview_documents(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_all_overview_documents] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -156,7 +162,8 @@ def fetch_one_summary_document(doc_s_no):
         result = cur.fetchone()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_one_summary_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -173,7 +180,8 @@ def delete_summary_document(doc_s_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_summary_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -198,7 +206,8 @@ def add_meeting_minutes(main_agenda, date_time, location, participants, responsi
         return row['doc_m_no']
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_meeting_minutes] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -226,7 +235,8 @@ def edit_meeting_minutes(main_agenda, date_time, location, participants, respons
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_meeting_minutes] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -243,7 +253,8 @@ def delete_meeting_minutes(doc_m_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_meeting_minutes] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -259,7 +270,8 @@ def fetch_all_meeting_minutes(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_all_meeting_minutes] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -275,7 +287,8 @@ def fetch_one_meeting_minutes(doc_m_no):
         result = cur.fetchone()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_one_meeting_minutes] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -300,7 +313,8 @@ def add_reqspec(feature_name, description, priority, non_functional_requirement_
         return row['doc_r_no']
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_reqspec] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -329,7 +343,8 @@ def edit_reqspec(feature_name, description, priority, non_functional_requirement
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_reqspec] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -346,7 +361,8 @@ def delete_reqspec(doc_r_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_reqspec] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -362,7 +378,8 @@ def fetch_all_reqspec(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_all_reqspec] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -378,7 +395,8 @@ def fetch_one_reqspec(doc_r_no):
         result = cur.fetchone()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_one_reqspec] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -402,7 +420,8 @@ def add_testcase(tcname, tcstart, tcend, tcpass, pid):
         return row['doc_t_no']
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_testcase] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -427,7 +446,8 @@ def edit_testcase(tcname, tcstart, tcend, tcpass, doc_t_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_testcase] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -444,7 +464,8 @@ def delete_testcase(doc_t_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_testcase] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -460,7 +481,8 @@ def fetch_all_testcase(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_all_testcase] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -482,7 +504,8 @@ def add_other_document(file_unique_id, file_name, file_path, pid):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [add_other_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -499,7 +522,8 @@ def delete_other_document(file_unique_id):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_other_document] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -515,7 +539,8 @@ def fetch_all_other_documents(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_all_other_documents] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -534,7 +559,8 @@ def fetch_file_path(file_unique_id):
         else:
             return False
     except Exception as e:
-        return False
+        print(f"Error [fetch_file_path] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -551,7 +577,8 @@ def edit_file_path(file_unique_id, new_file_path):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_file_path] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -568,7 +595,8 @@ def edit_file_name(file_unique_id, new_file_name):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [edit_file_name] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()

@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2024/11/01
+    마지막 수정 날짜 : 2024/11/15
 """
 
 import pymysql
@@ -23,7 +23,8 @@ def insert_user(payload, Token):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [insert_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -35,7 +36,7 @@ def validate_user(id, pw):
 
     try:
         # 매개 변수로 받은 ID를 통하여 해당 ID, PW 조회
-        cur.execute("SELECT s_id, s_pw FROM student WHERE id = %s", (id,))
+        cur.execute("SELECT s_id, s_pw FROM student WHERE s_id = %s", (id,))
         row = cur.fetchone()
 
         # 만약, 해당 ID 가 존재하고, 로그인 정보가 일치하다면 True 반환
@@ -44,8 +45,43 @@ def validate_user(id, pw):
         else:
             return False
     except Exception as e:
-        print(f"Error during user validation: {e}")
-        return False
+        print(f"Error [validate_user] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 사용자(학생) 로그인 성공 후 토큰(세션)을 DB에 저장하는 함수
+# 로그인 정보가 일치하여 로그인에 성공하면, 로그인한 학생의 ID와 생성된 토큰을 매개 변수로 받아서 해당 사용자의 현재 세션을 유지하기 위한 토큰을 저장한다
+def save_signin_user_token(id, Token):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE student SET s_token = %s WHERE s_id = %s", (Token, id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [save_signin_user_token] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 사용자(학생) 로그아웃 함수
+def signout_user(Token):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE student SET s_token = NULL WHERE s_token = %s", (Token,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [signout_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -61,7 +97,8 @@ def delete_user(id):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_user] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
@@ -72,7 +109,7 @@ def validate_user_token(id, Token):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT s_token FROM student WHERE id = %s", (id,))
+        cur.execute("SELECT s_token FROM student WHERE s_id = %s", (id,))
         stored_token = cur.fetchone()
 
         # 매개 변수로 받은 토큰과 DB에 저장된 해당 학생의 토큰 값이 일치하다면 True를 반환
@@ -81,7 +118,8 @@ def validate_user_token(id, Token):
         else:
             return False
     except Exception as e:
-        return False
+        print(f"Error [validate_user_token] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()

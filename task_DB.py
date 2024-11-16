@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : task_DB.py
-    마지막 수정 날짜 : 2024/11/02
+    마지막 수정 날짜 : 2024/11/14
 """
 
 import pymysql
@@ -22,12 +22,14 @@ def fetch_task_info(pid, univ_id):
         # task.py 에서 딕셔너리 키를 DB의 컬럼 이름으로 접근하도록 수정 필요
         return result
     except Exception as e:
-        return False
+        print(f"Error [fetch_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
 
 # 업무를 추가하는 함수
+# 추가하려는 업무의 내용, 프로젝트 번호, 학번을 매개 변수로 받는다
 # 업무를 추가할 때 프로젝트 번호와 학번도 매개 변수로 받아야 한다 (work 테이블의 p_no, s_no 컬럼 모두 NOT NULL)
 def add_task_info(tname, tperson, tstart, tend, pid, univ_id):
     connection = db_connect()
@@ -48,12 +50,14 @@ def add_task_info(tname, tperson, tstart, tend, pid, univ_id):
         return row['w_no']
     except Exception as e:
         connection.rollback()
-        return None
+        print(f"Error [add_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
 
 # 업무를 수정하는 함수
+# 수정하려는 업무의 내용과 업무 번호를 매개 변수로 받는다
 # 수정할 업무에 해당하는 업무 번호도 매개 변수로 같이 받아야 하며, 그렇지 않으면 모든 업무가 같은 내용으로 수정되는 문제가 발생
 def update_task_info(tname, tperson, tstart, tend, tfinish, w_no):
     connection = db_connect()
@@ -74,12 +78,14 @@ def update_task_info(tname, tperson, tstart, tend, tfinish, w_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [update_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
 
 # 업무를 삭제하는 함수
+# 삭제하려는 업무의 업무 번호를 매개 변수로 받는다
 def delete_task_info(w_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -91,7 +97,8 @@ def delete_task_info(w_no):
         return True
     except Exception as e:
         connection.rollback()
-        return False
+        print(f"Error [delete_task_info] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
