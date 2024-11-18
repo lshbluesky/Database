@@ -137,6 +137,7 @@ def add_project_user(pid, univ_id, permission, role):
         connection.close()
 
 # 프로젝트 참여자 수정(팀원 정보 수정) 함수
+# 수정하려는 팀원의 ID, 이름, 이메일, 학번, 프로젝트 번호, 역할을 매개 변수로 받는다
 def edit_project_user(id, name, email, univ_id, pid, role):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -159,6 +160,7 @@ def edit_project_user(id, name, email, univ_id, pid, role):
         connection.close()
 
 # 프로젝트 참여자 삭제(팀원 퇴출) 함수
+# 프로젝트 번호와 퇴출하려는 팀원의 학번을 매개 변수로 받는다
 def delete_project_user(pid, univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -176,6 +178,7 @@ def delete_project_user(pid, univ_id):
         connection.close()
 
 # 프로젝트 참여자(팀원 조회) 조회 함수
+# 조회하려는 팀원이 속한 프로젝트의 프로젝트 번호를 매개 변수로 받는다
 def fetch_project_user(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -193,6 +196,7 @@ def fetch_project_user(pid):
         connection.close()
 
 # 프로젝트의 중요 정보를 수정할 때 사용자의 권한(PM 권한)을 확인하는 함수
+# 프로젝트 번호와 학번을 매개 변수로 받는다
 def validate_pm_permission(pid, univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
