@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/13
+    마지막 수정 날짜 : 2024/11/18
 """
 
 import pymysql
@@ -114,17 +114,18 @@ def delete_project(pid):
         connection.close()
 
 # 프로젝트 참여자 추가(팀원 초대) 함수
+# 프로젝트 번호, 학번, PM 권한 여부(0/1), 역할을 매개 변수로 받는다
 # 주의사항 : 초대하려는 사용자(학생)는 회원가입이 이미 완료되어 있어야 한다
-def add_project_user(pid, univ_id, role):
+def add_project_user(pid, univ_id, permission, role):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_project_user = """
         INSERT INTO project_user(p_no, s_no, permission, role, grade)
-        VALUES (%s, %s, 0, %s, NULL)
+        VALUES (%s, %s, %s, %s, NULL)
         """
-        cur.execute(add_project_user, (pid, univ_id, role))
+        cur.execute(add_project_user, (pid, univ_id, permission, role))
         connection.commit()
         return True
     except Exception as e:
