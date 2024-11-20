@@ -138,15 +138,11 @@ def add_project_user(pid, univ_id, permission, role):
 
 # 프로젝트 참여자 수정(팀원 정보 수정) 함수
 # 수정하려는 팀원의 ID, 이름, 이메일, 학번, 프로젝트 번호, 역할을 매개 변수로 받는다
-def edit_project_user(id, name, email, univ_id, pid, role):
+def edit_project_user(univ_id, pid, role):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        # 학생 테이블에서 학번으로 수정할 학생을 선택하고 아이디, 이름, 이메일을 수정
-        cur.execute("UPDATE student SET s_id = %s, s_name = %s, s_email = %s WHERE s_no = %s", (id, name, email, univ_id))
-        connection.commit()
-
         # 프로젝트 참여 테이블에서 프로젝트 번호와 학번으로 수정할 팀원을 선택하고 역할을 수정
         cur.execute("UPDATE project_user SET role = %s WHERE p_no = %s AND s_no = %s", (role, pid, univ_id))
         connection.commit()
