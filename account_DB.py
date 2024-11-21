@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2024/11/15
+    마지막 수정 날짜 : 2024/11/21
 """
 
 import pymysql
@@ -23,7 +23,7 @@ def insert_user(payload, Token):
         return True
     except Exception as e:
         connection.rollback()
-        print(f"Error [insert_user]: {e}")
+        print(f"Error [insert_user] : {e}")
         return e
     finally:
         cur.close()
