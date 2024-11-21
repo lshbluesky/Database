@@ -12,18 +12,18 @@ from account import *
 def insert_user(payload, Token):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
-
     try:
         add_student = """
         INSERT INTO student(s_no, s_id, s_pw, s_name, s_email, s_token, dno)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
+        # 매개변수 바인딩 방식으로 안전하게 값 전달
         cur.execute(add_student, (payload.univ_id, payload.id, payload.pw, payload.name, payload.email, Token, payload.department))
         connection.commit()
         return True
     except Exception as e:
         connection.rollback()
-        print(f"Error [insert_user] : {e}")
+        print(f"Error [insert_user]: {e}")
         return e
     finally:
         cur.close()
