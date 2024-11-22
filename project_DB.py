@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/18
+    마지막 수정 날짜 : 2024/11/21
 """
 
 import pymysql
@@ -137,7 +137,7 @@ def add_project_user(pid, univ_id, permission, role):
         connection.close()
 
 # 프로젝트 참여자 수정(팀원 정보 수정) 함수
-# 수정하려는 팀원의 ID, 이름, 이메일, 학번, 프로젝트 번호, 역할을 매개 변수로 받는다
+# 수정하려는 팀원의 학번, 프로젝트 번호, 역할을 매개 변수로 받는다
 def edit_project_user(univ_id, pid, role):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
