@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/21
+    마지막 수정 날짜 : 2024/11/24
 """
 
 import pymysql
@@ -97,6 +97,15 @@ def delete_project(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
     
     try:
+        # 매개 변수로 받은 pid 값을 가진 프로젝트가 존재하는지 확인하기 위해 COUNT 함수를 사용
+        cur.execute("SELECT COUNT(*) AS cnt FROM project WHERE p_no = %s", (pid,))
+        result = cur.fetchone()
+
+        # 매개 변수로 받은 pid 값을 가진 프로젝트가 존재하지 않으면 오류 메시지 출력 및 False 반환
+        if result['cnt'] == 0:
+            print(f"Error [delete_project] : Project UID {pid} does not exist.")
+            return False
+        
         # 프로젝트 테이블에서 매개 변수로 받은 프로젝트 삭제
         cur.execute("DELETE FROM project WHERE p_no = %s", (pid,))
         connection.commit()
