@@ -600,3 +600,19 @@ def edit_file_name(file_unique_id, new_file_name):
     finally:
         cur.close()
         connection.close()
+
+# 기타 산출물 고유 ID(PUID)가 데이터베이스에 존재하는지 확인
+def is_uid_exists(uid):
+    connection = db_connect()
+    cur = connection.cursor()
+
+    try:
+        cur.execute("SELECT COUNT(*) AS count FROM doc_other WHERE file_unique_id = %s", (uid))
+        result = cur.fetchone()
+        return result[0] > 0
+    except Exception as e:
+        print(f"Error [is_uid_exists] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
