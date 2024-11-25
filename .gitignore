@@ -4,8 +4,12 @@ __pycache__/
 Backend\ Project/
 Database\ Project/
 account.py
+docs_converter.py
+grade.py
 main.py
 output.py
 project.py
 task.py
 test.py
+upload.py
+wbs.py
