@@ -35,18 +35,15 @@ def validate_user(id, pw):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        # 매개 변수로 받은 ID를 통하여 해당 ID, PW, s_no 조회
         cur.execute("SELECT s_id, s_pw, s_no FROM student WHERE s_id = %s", (id,))
         row = cur.fetchone()
-
-        # 만약, 해당 ID가 존재하고, 로그인 정보가 일치한다면 s_no 반환
         if row and id == row['s_id'] and pw == row['s_pw']:
-            return row['s_no']  # s_no 반환
+            return row['s_no']
         else:
-            return None  # 로그인 실패 시 None 반환
+            return None
     except Exception as e:
         print(f"Error [validate_user] : {e}")
-        return e
+        raise e  # 문자열 대신 예외를 직접 발생시킴
     finally:
         cur.close()
         connection.close()
