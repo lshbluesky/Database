@@ -249,7 +249,7 @@ def fetch_project_for_LLM(pid):
         FROM (
             SELECT * 
             FROM project 
-            WHERE p_no = 28405
+            WHERE p_no = %s
         ) p
         LEFT JOIN work w ON p.p_no = w.p_no
         LEFT JOIN progress pg ON p.p_no = pg.p_no
