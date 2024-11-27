@@ -236,3 +236,36 @@ def is_uid_exists(uid):
     finally:
         cur.close()
         connection.close()
+
+# LLM에 제공할 프로젝트의 모든 정보를 반환하는 함수
+# 프로젝트 번호를 매개 변수로 받으며, 프로젝트와 업무, 진척도, 모든 산출물 테이블을 조인하여 조회한 결과를 반환한다
+def fetch_project_for_LLM(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        fetch_project_for_LLM = """
+        SELECT *
+        FROM (
+            SELECT * 
+            FROM project 
+            WHERE p_no = 28405
+        ) p
+        LEFT JOIN work w ON p.p_no = w.p_no
+        LEFT JOIN progress pg ON p.p_no = pg.p_no
+        LEFT JOIN doc_meeting dm ON p.p_no = dm.p_no
+        LEFT JOIN doc_summary ds ON p.p_no = ds.p_no
+        LEFT JOIN doc_require dr ON p.p_no = dr.p_no
+        LEFT JOIN doc_test dt ON p.p_no = dt.p_no
+        LEFT JOIN doc_report drep ON p.p_no = drep.p_no
+        LEFT JOIN doc_other do ON p.p_no = do.p_no
+        """
+        cur.execute(fetch_project_for_LLM, (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_project_for_LLM] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
