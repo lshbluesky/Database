@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/11/14
+    마지막 수정 날짜 : 2024/11/28
 """
 
 import pymysql
@@ -489,17 +489,17 @@ def fetch_all_testcase(pid):
 
 # ------------------------------ 기타 산출물 ------------------------------ #
 # 기타 산출물을 추가하는 함수
-# 추가하려는 기타 산출물의 산출물 고유 번호, 파일 이름, 파일 경로, 프로젝트 번호를 매개 변수로 받는다
-def add_other_document(file_unique_id, file_name, file_path, file_date, pid):
+# 추가하려는 기타 산출물의 산출물 고유 번호, 파일 이름, 파일 경로, 업로드 날짜, 학번, 프로젝트 번호를 매개 변수로 받는다
+def add_other_document(file_unique_id, file_name, file_path, file_date, univ_id, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_doc_other = """
-        INSERT INTO doc_other (file_no, file_name, file_path, file_date, p_no)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO doc_other (file_no, file_name, file_path, file_date, s_no, p_no)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_doc_other, (file_unique_id, file_name, file_path, file_date, pid))
+        cur.execute(add_doc_other, (file_unique_id, file_name, file_path, file_date, univ_id, pid))
         connection.commit()
         return True
     except Exception as e:
