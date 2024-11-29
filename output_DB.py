@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/11/28
+    마지막 수정 날짜 : 2024/11/29
 """
 
 import pymysql
@@ -175,6 +175,13 @@ def delete_summary_document(doc_s_no):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_summary WHERE doc_s_no = %s", (doc_s_no,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_summary_document] : Project summary document number {doc_s_no} does not exist.")
+            return False
+        
         cur.execute("DELETE FROM doc_summary WHERE doc_s_no = %s", (doc_s_no,))
         connection.commit()
         return True
@@ -248,6 +255,13 @@ def delete_meeting_minutes(doc_m_no):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_meeting WHERE doc_m_no = %s", (doc_m_no,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_meeting_minutes] : MM document number {doc_m_no} does not exist.")
+            return False
+        
         cur.execute("DELETE FROM doc_meeting WHERE doc_m_no = %s", (doc_m_no,))
         connection.commit()
         return True
@@ -356,6 +370,13 @@ def delete_reqspec(doc_r_no):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_require WHERE doc_r_no = %s", (doc_r_no,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_reqspec] : Requirement specification document number {doc_r_no} does not exist.")
+            return False
+        
         cur.execute("DELETE FROM doc_require WHERE doc_r_no = %s", (doc_r_no,))
         connection.commit()
         return True
@@ -459,6 +480,13 @@ def delete_testcase(doc_t_no):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_test WHERE doc_t_no = %s", (doc_t_no,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_testcase] : Test Case number {doc_t_no} does not exist.")
+            return False
+        
         cur.execute("DELETE FROM doc_test WHERE doc_t_no = %s", (doc_t_no,))
         connection.commit()
         return True
@@ -517,6 +545,13 @@ def delete_other_document(file_unique_id):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_other WHERE file_no = %s", (file_unique_id,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_other_document] : File Unique ID {file_unique_id} does not exist.")
+            return False
+        
         cur.execute("DELETE FROM doc_other WHERE file_no = %s", (file_unique_id,))
         connection.commit()
         return True
