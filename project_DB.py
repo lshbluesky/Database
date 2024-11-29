@@ -1,10 +1,11 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/24
+    마지막 수정 날짜 : 2024/11/28
 """
 
 import pymysql
+import json
 from mysql_connection import db_connect
 from project import *
 
@@ -232,6 +233,56 @@ def is_uid_exists(uid):
         return result[0] > 0
     except Exception as e:
         print(f"Error [is_uid_exists] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# LLM에 제공할 프로젝트의 모든 정보를 반환하는 함수
+# 프로젝트 번호를 매개 변수로 받아서 프로젝트와 업무, 진척도, 모든 산출물 테이블을 각각 조회하고 JSON으로 가공하여 반환한다
+def fetch_project_for_LLM(pid):
+    connection = db_connect()
+    cur = connection.cursor()
+
+    try:
+        cur.execute("SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end FROM project WHERE p_no = %s", (pid,))
+        project = cur.fetchone()
+
+        cur.execute("SELECT w_name, w_person, w_start, w_end, w_checked FROM work WHERE p_no = %s", (pid,))
+        work_list = cur.fetchall()
+
+        cur.execute("SELECT group1, group2, group3, work, output_file, manager, ratio, start_date, end_date FROM progress WHERE p_no = %s", (pid,))
+        progress_list = cur.fetchall()
+
+        cur.execute("SELECT * FROM doc_meeting WHERE p_no = %s", (pid,))
+        meeting_list = cur.fetchall()
+
+        cur.execute("SELECT * FROM doc_summary WHERE p_no = %s", (pid,))
+        summary_list = cur.fetchall()
+
+        cur.execute("SELECT * FROM doc_require WHERE p_no = %s", (pid,))
+        requirement_list = cur.fetchall()
+
+        cur.execute("SELECT * FROM doc_test WHERE p_no = %s", (pid,))
+        test_list = cur.fetchall()
+
+        cur.execute("SELECT * FROM doc_report WHERE p_no = %s", (pid,))
+        report_list = cur.fetchall()
+
+        project_data = {
+            "project": project,
+            "work_list": work_list,
+            "progress_list": progress_list,
+            "meeting_list": meeting_list,
+            "summary_list": summary_list,
+            "requirement_list": requirement_list,
+            "test_list": test_list,
+            "report_list": report_list
+        }
+
+        return json.dumps(project_data, ensure_ascii=False, default=str)
+    except Exception as e:
+        print(f"Error [fetch_project_for_LLM] : {e}")
         return e
     finally:
         cur.close()
