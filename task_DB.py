@@ -95,7 +95,7 @@ def delete_task_info(w_no):
         result = cur.fetchone()
 
         if result['cnt'] == 0:
-            print(f"Error [delete_task_info] : Work ID {w_no} does not exist.")
+            print(f"Error [delete_task_info] : Work number {w_no} does not exist.")
             return False
         
         # 업무 번호로 해당 업무 삭제
