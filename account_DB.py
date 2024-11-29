@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2024/11/21
+    마지막 수정 날짜 : 2024/11/29
 """
 
 import pymysql
@@ -89,6 +89,13 @@ def delete_user(id):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM student WHERE s_id = %s", (id,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_user] : User ID {id} does not exist.")
+            return False
+        
         cur.execute("DELETE FROM student WHERE s_id = %s", (id,))
         connection.commit()
         return True
