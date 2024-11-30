@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : task_DB.py
-    마지막 수정 날짜 : 2024/11/14
+    마지막 수정 날짜 : 2024/11/29
 """
 
 import pymysql
@@ -91,6 +91,13 @@ def delete_task_info(w_no):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM work WHERE w_no = %s", (w_no,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_task_info] : Work number {w_no} does not exist.")
+            return False
+        
         # 업무 번호로 해당 업무 삭제
         cur.execute("DELETE FROM work WHERE w_no = %s", (w_no,))
         connection.commit()
