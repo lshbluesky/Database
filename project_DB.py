@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/29
+    마지막 수정 날짜 : 2024/11/30
 """
 
 import pymysql
@@ -176,7 +176,7 @@ def delete_project_user(pid, univ_id):
         result = cur.fetchone()
 
         if result['cnt'] == 0:
-            print(f"Error [delete_project_user] : Project user {univ_id} does not exist in {pid} project.")
+            print(f"Error [delete_project_user] : Project user {univ_id} does not exist in Project UID {pid}.")
             return False
         
         cur.execute("DELETE FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
