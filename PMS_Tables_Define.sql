@@ -93,7 +93,6 @@ CREATE TABLE doc_require (
  doc_r_s_name TEXT NULL,
  doc_r_s_content TEXT NULL,
  doc_r_date DATE NOT NULL,
- doc_r_path VARCHAR(1000) NULL,
  p_no INT NOT NULL
 );
 
@@ -106,7 +105,6 @@ CREATE TABLE doc_meeting (
  doc_m_manager TEXT NOT NULL,
  doc_m_content TEXT NOT NULL,
  doc_m_result TEXT NOT NULL,
- doc_m_path VARCHAR(1000) NULL,
  p_no INT NOT NULL
 );
 
@@ -122,7 +120,6 @@ CREATE TABLE doc_summary (
  doc_s_start DATE NOT NULL,
  doc_s_end DATE NOT NULL,
  doc_s_date DATE NOT NULL,
- doc_s_path VARCHAR(1000) NULL,
  p_no INT NOT NULL
 );
 
@@ -141,7 +138,6 @@ CREATE TABLE doc_report (
  doc_rep_content TEXT NOT NULL,
  doc_rep_writer TEXT NOT NULL,
  doc_rep_date DATE NOT NULL,
- doc_rep_path VARCHAR(1000) NULL,
  p_no INT NOT NULL
 );
 
