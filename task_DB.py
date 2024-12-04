@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : task_DB.py
-    마지막 수정 날짜 : 2024/11/29
+    마지막 수정 날짜 : 2024/12/04
 """
 
 import pymysql
@@ -28,6 +28,8 @@ def fetch_task_info(pid, univ_id):
         cur.close()
         connection.close()
 
+# 특정 프로젝트의 모든 업무를 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
 def fetch_all_task_info(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
