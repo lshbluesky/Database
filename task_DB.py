@@ -28,6 +28,21 @@ def fetch_task_info(pid, univ_id):
         cur.close()
         connection.close()
 
+def fetch_all_task_info(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM work WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_all_task_info] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # 업무를 추가하는 함수
 # 추가하려는 업무의 내용, 프로젝트 번호, 학번을 매개 변수로 받는다
 # 업무를 추가할 때 프로젝트 번호와 학번도 매개 변수로 받아야 한다 (work 테이블의 p_no, s_no 컬럼 모두 NOT NULL)
