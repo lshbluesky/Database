@@ -42,6 +42,7 @@ CREATE TABLE progress (
  group1 VARCHAR(300) NULL,
  group2 VARCHAR(300) NULL,
  group3 VARCHAR(300) NULL,
+ group4 VARCHAR(300) NULL,
  work VARCHAR(500) NULL,
  output_file VARCHAR(500) NULL,
  manager VARCHAR(20) NULL,
@@ -52,6 +53,7 @@ CREATE TABLE progress (
  group1no INT NULL,
  group2no INT NULL,
  group3no INT NULL,
+ group4no INT NULL,
  p_no INT NOT NULL
 );
 
@@ -135,9 +137,16 @@ CREATE TABLE doc_test (
 CREATE TABLE doc_report (
  doc_rep_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
  doc_rep_name TEXT NOT NULL,
- doc_rep_content TEXT NOT NULL,
  doc_rep_writer TEXT NOT NULL,
  doc_rep_date DATE NOT NULL,
+ doc_rep_pname TEXT NULL,
+ doc_rep_member TEXT NULL,
+ doc_rep_professor TEXT NULL,
+ doc_rep_research TEXT NULL,
+ doc_rep_design TEXT NULL,
+ doc_rep_arch TEXT NULL,
+ doc_rep_result TEXT NULL,
+ doc_rep_conclusion TEXT NULL,
  p_no INT NOT NULL
 );
 
