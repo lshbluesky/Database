@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/11/29
+    마지막 수정 날짜 : 2024/12/05
 """
 
 import pymysql
@@ -510,6 +510,124 @@ def fetch_all_testcase(pid):
         return result
     except Exception as e:
         print(f"Error [fetch_all_testcase] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# ------------------------------ 보고서 ------------------------------ #
+# 보고서를 추가하는 함수
+# 추가하려는 보고서의 내용과 프로젝트 번호를 매개 변수로 받는다
+def add_report(doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_doc_report = """
+        INSERT INTO doc_report(doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion, p_no)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cur.execute(add_doc_report, (doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion, pid))
+        connection.commit()
+
+        cur.execute("SELECT * FROM doc_report WHERE p_no = %s ORDER BY doc_rep_no DESC", (pid,))
+        row = cur.fetchone()
+        return row['doc_rep_no']
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [add_report] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 보고서를 수정하는 함수
+# 수정하려는 보고서의 내용과 산출물 번호를 매개 변수로 받는다
+def edit_report(doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion, doc_rep_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        edit_doc_report = """
+        UPDATE doc_report
+        SET doc_rep_name = %s,
+            doc_rep_writer = %s,
+            doc_rep_date = %s,
+            doc_rep_pname = %s,
+            doc_rep_member = %s,
+            doc_rep_professor = %s,
+            doc_rep_research = %s,
+            doc_rep_design = %s,
+            doc_rep_arch = %s,
+            doc_rep_result = %s,
+            doc_rep_conclusion = %s
+        WHERE doc_rep_no = %s
+        """
+        cur.execute(edit_doc_report, (doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion, doc_rep_no))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [edit_report] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 보고서를 삭제하는 함수
+# 삭제하려는 보고서의 산출물 번호를 매개 변수로 받는다
+def delete_report(doc_rep_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_report WHERE doc_rep_no = %s", (doc_rep_no,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_report] : Report document number {doc_rep_no} does not exist.")
+            return False
+        
+        cur.execute("DELETE FROM doc_report WHERE doc_rep_no = %s", (doc_rep_no,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [delete_report] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 보고서를 모두 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_all_report(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_report WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_all_report] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 보고서를 하나만 조회하는 함수
+# 조회하려는 보고서의 산출물 번호를 매개 변수로 받는다
+def fetch_one_report(doc_rep_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_report WHERE doc_rep_no = %s", (doc_rep_no,))
+        result = cur.fetchone()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_one_report] : {e}")
         return e
     finally:
         cur.close()
