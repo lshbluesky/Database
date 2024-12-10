@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/11/30
+    마지막 수정 날짜 : 2024/12/10
 """
 
 import pymysql
@@ -197,8 +197,12 @@ def fetch_project_user(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        # 프로젝트 참여 테이블에서 프로젝트 번호로 해당 프로젝트에 참여하고 있는 모든 팀원 조회
-        cur.execute("SELECT * FROM project_user WHERE p_no = %s", (pid,))
+        cur.execute("""
+            SELECT pu.*, s.s_name 
+            FROM project_user pu
+            JOIN student s ON pu.s_no = s.s_no
+            WHERE pu.p_no = %s
+        """, (pid,))
         result = cur.fetchall()
         return result
     except Exception as e:
@@ -207,6 +211,7 @@ def fetch_project_user(pid):
     finally:
         cur.close()
         connection.close()
+
 
 # 프로젝트의 중요 정보를 수정할 때 사용자의 권한(PM 권한)을 확인하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
