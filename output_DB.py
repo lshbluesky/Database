@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/12/05
+    마지막 수정 날짜 : 2024/12/15
 """
 
 import pymysql
@@ -82,16 +82,16 @@ def fetch_all_summary_documents(pid):
 
 # 프로젝트 개요서 상세본을 추가하는 함수
 # 추가하려는 프로젝트 개요서 상세본의 내용과 프로젝트 번호를 매개 변수로 받는다
-def add_overview_document(poverview, pteam, pgoals, pstart, pend, prange, pstack, pid):
+def add_overview_document(pname, pteam, poverview, poutcomes, pgoals, pstart, pend, prange, pstack, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_doc_overview = """
-        INSERT INTO doc_summary(doc_s_overview, doc_s_team, doc_s_goals, doc_s_start, doc_s_end, doc_s_range, doc_s_stack, doc_s_date, p_no)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), %s)
+        INSERT INTO doc_summary(doc_s_name, doc_s_overview, doc_s_goals, doc_s_range, doc_s_outcomes, doc_s_team, doc_s_stack, doc_s_start, doc_s_end, doc_s_date, p_no)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), %s)
         """
-        cur.execute(add_doc_overview, (poverview, pteam, pgoals, pstart, pend, prange, pstack, pid))
+        cur.execute(add_doc_overview, (pname, poverview, pgoals, prange, poutcomes, pteam, pstack, pstart, pend, pid))
         connection.commit()
 
         cur.execute("SELECT * FROM doc_summary WHERE p_no = %s ORDER BY doc_s_no DESC", (pid,))
@@ -107,7 +107,7 @@ def add_overview_document(poverview, pteam, pgoals, pstart, pend, prange, pstack
 
 # 프로젝트 개요서 상세본을 수정하는 함수
 # 수정하려는 프로젝트 개요서 상세본의 내용과 산출물 번호를 매개 변수로 받는다
-def edit_overview_document(poverview, pteam, pgoals, pstart, pend, prange, pstack, doc_s_no):
+def edit_overview_document(pname, pteam, psummary, poverview, poutcomes, pgoals, pstart, pend, prange, pstack, doc_s_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
