@@ -114,16 +114,19 @@ def edit_overview_document(pname, pteam, psummary, poverview, poutcomes, pgoals,
     try:
         edit_doc_overview = """
         UPDATE doc_summary
-        SET doc_s_overview = %s,
-            doc_s_team = %s,
+        SET doc_s_name = %s,
+            doc_s_overview = %s,
             doc_s_goals = %s,
+            doc_s_range = %s,
+            doc_s_outcomes = %s,
+            doc_s_team = %s,
+            doc_s_stack = %s,
             doc_s_start = %s,
             doc_s_end = %s,
-            doc_s_range = %s,
-            doc_s_stack = %s
+            doc_s_date = %s,
         WHERE doc_s_no = %s
         """
-        cur.execute(edit_doc_overview, (poverview, pteam, pgoals, pstart, pend, prange, pstack, doc_s_no))
+        cur.execute(edit_doc_overview, (pname, poverview, pgoals, prange, poutcomes, pteam, pstack, pstart, pend, doc_s_no))
         connection.commit()
         return True
     except Exception as e:
