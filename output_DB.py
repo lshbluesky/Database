@@ -123,7 +123,6 @@ def edit_overview_document(pname, pteam, psummary, poverview, poutcomes, pgoals,
             doc_s_stack = %s,
             doc_s_start = %s,
             doc_s_end = %s,
-            doc_s_date = %s,
         WHERE doc_s_no = %s
         """
         cur.execute(edit_doc_overview, (pname, poverview, pgoals, prange, poutcomes, pteam, pstack, pstart, pend, doc_s_no))
