@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2024/12/27
+    마지막 수정 날짜 : 2024/12/28
 """
 
 import pymysql
@@ -21,6 +21,27 @@ def export_csv(pid):
 
         save_csv_project = f"SELECT * FROM project WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
         cur.execute(save_csv_project)
+
+        save_csv_work = f"SELECT * FROM work WHERE p_no = {pid} INTO OUTFILE '{csv_path}work_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
+        cur.execute(save_csv_work)
+
+        save_csv_progress = f"SELECT * FROM progress WHERE p_no = {pid} INTO OUTFILE '{csv_path}progress_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
+        cur.execute(save_csv_progress)
+
+        save_csv_doc_s = f"SELECT * FROM doc_summary WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_s_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
+        cur.execute(save_csv_doc_s)
+
+        save_csv_doc_r = f"SELECT * FROM doc_require WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_r_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
+        cur.execute(save_csv_doc_r)
+
+        save_csv_doc_m = f"SELECT * FROM doc_meeting WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_m_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
+        cur.execute(save_csv_doc_m)
+
+        save_csv_doc_t = f"SELECT * FROM doc_test WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_t_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
+        cur.execute(save_csv_doc_t)
+
+        save_csv_doc_rep = f"SELECT * FROM doc_report WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_rep_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';"
+        cur.execute(save_csv_doc_rep)
 
         return True
     except Exception as e:
