@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2024/12/15
+    마지막 수정 날짜 : 2025/01/02
 """
 
 import pymysql
@@ -700,6 +700,28 @@ def fetch_all_other_documents(pid):
         cur.close()
         connection.close()
 
+
+# 특정 기타 산출물을 조회하는 함수
+# 산출물 고유 번호를 매게 변수로 받는다
+def fetch_one_other_documents(file_unique_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_other WHERE file_no = %s", (file_unique_id,))
+        result = cur.fetchone()
+        if result:
+            return result
+        else:
+            return None
+    except Exception as e:
+        print(f"Error [fetch_other_documents] : {e}")
+        return None
+    finally:
+        cur.close()
+        connection.close()
+
+
 # 기타 산출물의 첨부 파일 경로를 조회하여 반환하는 함수
 # 산출물 고유 번호를 매개 변수로 받는다
 def fetch_file_path(file_unique_id):
@@ -719,6 +741,7 @@ def fetch_file_path(file_unique_id):
     finally:
         cur.close()
         connection.close()
+
 
 # 기타 산출물의 첨부 파일 경로를 수정하는 함수
 # 산출물 고유 번호와 새로 수정할 파일 경로를 매개 변수로 받는다
