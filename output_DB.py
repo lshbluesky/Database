@@ -715,7 +715,7 @@ def fetch_one_other_documents(file_unique_id):
         else:
             return None
     except Exception as e:
-        print(f"Error [fetch_other_documents] : {e}")
+        print(f"Error [fetch_one_other_documents] : {e}")
         return None
     finally:
         cur.close()
