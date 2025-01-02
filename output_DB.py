@@ -517,6 +517,25 @@ def fetch_all_testcase(pid):
         cur.close()
         connection.close()
 
+
+# 특정 테스트 케이스를 조회하는 함수
+# 테스트 번호를 매개 변수로 받는다
+def fetch_one_testcase(doc_t_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_test WHERE doc_t_no = %s", (doc_t_no,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_one_testcase] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+
 # ------------------------------ 보고서 ------------------------------ #
 # 보고서를 추가하는 함수
 # 추가하려는 보고서의 내용과 프로젝트 번호를 매개 변수로 받는다
