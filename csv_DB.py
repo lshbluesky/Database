@@ -52,6 +52,7 @@ def export_csv(pid):
         connection.close()
 
 # CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하는 함수
+# {산출물 종류(문자열) : CSV 파일 경로(문자열)} 형태의 딕셔너리를 매개 변수로 받아서 CSV 파일의 내용을 DB에 저장한다
 def import_csv(file_paths):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
