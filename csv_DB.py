@@ -52,12 +52,46 @@ def export_csv(pid):
         connection.close()
 
 # CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하는 함수
-def import_csv():
+def import_csv(file_paths):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        pass
+        if "project" in file_paths:
+            load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_project)
+
+        if "work" in file_paths:
+            load_csv_work = f"LOAD DATA INFILE '{file_paths['work']}' INTO TABLE work FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_work)
+
+        if "progress" in file_paths:
+            load_csv_progress = f"LOAD DATA INFILE '{file_paths['progress']}' INTO TABLE progress FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_progress)
+
+        if "doc_summary" in file_paths:
+            load_csv_doc_s = f"LOAD DATA INFILE '{file_paths['doc_summary']}' INTO TABLE doc_summary FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_doc_s)
+
+        if "doc_require" in file_paths:
+            load_csv_doc_r = f"LOAD DATA INFILE '{file_paths['doc_require']}' INTO TABLE doc_require FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_doc_r)
+
+        if "doc_meeting" in file_paths:
+            load_csv_doc_m = f"LOAD DATA INFILE '{file_paths['doc_meeting']}' INTO TABLE doc_meeting FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_doc_m)
+
+        if "doc_test" in file_paths:
+            load_csv_doc_t = f"LOAD DATA INFILE '{file_paths['doc_test']}' INTO TABLE doc_test FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_doc_t)
+
+        if "doc_report" in file_paths:
+            load_csv_doc_rep = f"LOAD DATA INFILE '{file_paths['doc_report']}' INTO TABLE doc_report FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+            cur.execute(load_csv_doc_rep)
+
+        connection.commit()
+        print("Info : 모든 CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하였습니다.")
+        return True
     except Exception as e:
         print(f"Error [import_csv] : {e}")
         return e
