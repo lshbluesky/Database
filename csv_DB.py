@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2024/12/30
+    마지막 수정 날짜 : 2025/01/03
 """
 
 import pymysql
@@ -46,6 +46,20 @@ def export_csv(pid):
         return True
     except Exception as e:
         print(f"Error [export_csv] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하는 함수
+def import_csv():
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        pass
+    except Exception as e:
+        print(f"Error [import_csv] : {e}")
         return e
     finally:
         cur.close()
