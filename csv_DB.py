@@ -67,6 +67,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_project)
                 import_ok.append("project")
             except Exception as e:
+                print(f"Error [import_csv :: project] : {e}")
                 import_fail.append("project")
 
         if "work" in file_paths:
@@ -75,6 +76,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_work)
                 import_ok.append("work")
             except Exception as e:
+                print(f"Error [import_csv :: work] : {e}")
                 import_fail.append("work")
 
         if "progress" in file_paths:
@@ -83,6 +85,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_progress)
                 import_ok.append("progress")
             except Exception as e:
+                print(f"Error [import_csv :: progress] : {e}")
                 import_fail.append("progress")
 
         if "doc_summary" in file_paths:
@@ -91,6 +94,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_doc_s)
                 import_ok.append("doc_summary")
             except Exception as e:
+                print(f"Error [import_csv :: doc_summary] : {e}")
                 import_fail.append("doc_summary")
 
         if "doc_require" in file_paths:
@@ -99,6 +103,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_doc_r)
                 import_ok.append("doc_require")
             except Exception as e:
+                print(f"Error [import_csv :: doc_require] : {e}")
                 import_fail.append("doc_require")
 
         if "doc_meeting" in file_paths:
@@ -107,6 +112,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_doc_m)
                 import_ok.append("doc_meeting")
             except Exception as e:
+                print(f"Error [import_csv :: doc_meeting] : {e}")
                 import_fail.append("doc_meeting")
 
         if "doc_test" in file_paths:
@@ -115,6 +121,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_doc_t)
                 import_ok.append("doc_test")
             except Exception as e:
+                print(f"Error [import_csv :: doc_test] : {e}")
                 import_fail.append("doc_test")
 
         if "doc_report" in file_paths:
@@ -123,6 +130,7 @@ def import_csv(file_paths):
                 cur.execute(load_csv_doc_rep)
                 import_ok.append("doc_report")
             except Exception as e:
+                print(f"Error [import_csv :: doc_report] : {e}")
                 import_fail.append("doc_report")
 
         connection.commit()
