@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/03
+    마지막 수정 날짜 : 2025/01/04
 """
 
 import pymysql
@@ -57,41 +57,81 @@ def import_csv(file_paths):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
+    import_ok = []
+    import_fail = []
+
     try:
         if "project" in file_paths:
-            load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_project)
+            try:
+                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_project)
+                import_ok.append("project")
+            except Exception as e:
+                import_fail.append("project")
 
         if "work" in file_paths:
-            load_csv_work = f"LOAD DATA INFILE '{file_paths['work']}' INTO TABLE work FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_work)
+            try:
+                load_csv_work = f"LOAD DATA INFILE '{file_paths['work']}' INTO TABLE work FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_work)
+                import_ok.append("work")
+            except Exception as e:
+                import_fail.append("work")
 
         if "progress" in file_paths:
-            load_csv_progress = f"LOAD DATA INFILE '{file_paths['progress']}' INTO TABLE progress FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_progress)
+            try:
+                load_csv_progress = f"LOAD DATA INFILE '{file_paths['progress']}' INTO TABLE progress FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_progress)
+                import_ok.append("progress")
+            except Exception as e:
+                import_fail.append("progress")
 
         if "doc_summary" in file_paths:
-            load_csv_doc_s = f"LOAD DATA INFILE '{file_paths['doc_summary']}' INTO TABLE doc_summary FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_doc_s)
+            try:
+                load_csv_doc_s = f"LOAD DATA INFILE '{file_paths['doc_summary']}' INTO TABLE doc_summary FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_doc_s)
+                import_ok.append("doc_summary")
+            except Exception as e:
+                import_fail.append("doc_summary")
 
         if "doc_require" in file_paths:
-            load_csv_doc_r = f"LOAD DATA INFILE '{file_paths['doc_require']}' INTO TABLE doc_require FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_doc_r)
+            try:
+                load_csv_doc_r = f"LOAD DATA INFILE '{file_paths['doc_require']}' INTO TABLE doc_require FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_doc_r)
+                import_ok.append("doc_require")
+            except Exception as e:
+                import_fail.append("doc_require")
 
         if "doc_meeting" in file_paths:
-            load_csv_doc_m = f"LOAD DATA INFILE '{file_paths['doc_meeting']}' INTO TABLE doc_meeting FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_doc_m)
+            try:
+                load_csv_doc_m = f"LOAD DATA INFILE '{file_paths['doc_meeting']}' INTO TABLE doc_meeting FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_doc_m)
+                import_ok.append("doc_meeting")
+            except Exception as e:
+                import_fail.append("doc_meeting")
 
         if "doc_test" in file_paths:
-            load_csv_doc_t = f"LOAD DATA INFILE '{file_paths['doc_test']}' INTO TABLE doc_test FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_doc_t)
+            try:
+                load_csv_doc_t = f"LOAD DATA INFILE '{file_paths['doc_test']}' INTO TABLE doc_test FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_doc_t)
+                import_ok.append("doc_test")
+            except Exception as e:
+                import_fail.append("doc_test")
 
         if "doc_report" in file_paths:
-            load_csv_doc_rep = f"LOAD DATA INFILE '{file_paths['doc_report']}' INTO TABLE doc_report FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-            cur.execute(load_csv_doc_rep)
+            try:
+                load_csv_doc_rep = f"LOAD DATA INFILE '{file_paths['doc_report']}' INTO TABLE doc_report FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+                cur.execute(load_csv_doc_rep)
+                import_ok.append("doc_report")
+            except Exception as e:
+                import_fail.append("doc_report")
 
         connection.commit()
-        print("Info : 모든 CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하였습니다.")
+
+        if not import_fail:
+            print("Info : 모든 CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하였습니다.")
+        else:
+            print(f"Info : {len(import_ok)}개의 테이블을 DB에 불러왔습니다.")
+            print(f"Warning : 불러오지 못한 테이블은 [{', '.join(import_fail)}] 입니다.")
         return True
     except Exception as e:
         print(f"Error [import_csv] : {e}")
