@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/04
+    마지막 수정 날짜 : 2025/01/06
 """
 
 import pymysql
@@ -53,6 +53,18 @@ def export_csv(pid):
 
 # CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하는 함수
 # {산출물 종류(문자열) : CSV 파일 경로(문자열)} 형태의 딕셔너리를 매개 변수로 받아서 CSV 파일의 내용을 DB에 저장한다
+# csv_dict = {
+#     "project" : "/var/lib/mysql-files/project_10001_250105-153058.csv",
+#     "work" : "/var/lib/mysql-files/work_10001_250105-153058.csv",
+#     "progress" : "/var/lib/mysql-files/progress_10001_250105-153058.csv",
+#     "doc_summary" : "/var/lib/mysql-files/doc_s_10001_250105-153058.csv",
+#     "doc_require" : "/var/lib/mysql-files/doc_r_10001_250105-153058.csv",
+#     "doc_meeting" : "/var/lib/mysql-files/doc_m_10001_250105-153058.csv",
+#     "doc_test" : "/var/lib/mysql-files/doc_t_10001_250105-153058.csv",
+#     "doc_report" : "/var/lib/mysql-files/doc_rep_10001_250105-153058.csv"
+# }
+# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict) 와 같이 함수를 호출하여 사용한다
+# 참고 : 딕셔너리의 키는 수정이 불가능하며, 값은 /var/lib/mysql-files 경로 대신에 실제 CSV 파일이 저장되어 있는 다른 경로로 변경할 수 있다
 def import_csv(file_paths):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
