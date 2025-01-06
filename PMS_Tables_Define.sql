@@ -76,7 +76,7 @@ CREATE TABLE work (
  w_end DATE NOT NULL,
  w_checked BOOLEAN NOT NULL,
  p_no INT NOT NULL,
- s_no INT NOT NULL
+ s_no INT NULL
 );
 
 CREATE TABLE dept (
