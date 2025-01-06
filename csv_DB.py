@@ -149,10 +149,11 @@ def import_csv(file_paths):
 
         if not import_fail:
             print("Info : 모든 CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하였습니다.")
+            return True
         else:
             print(f"Info : {len(import_ok)}개의 테이블을 DB에 불러왔습니다.")
             print(f"Warning : 불러오지 못한 테이블은 [{', '.join(import_fail)}] 입니다.")
-        return True
+            return False
     except Exception as e:
         print(f"Error [import_csv] : {e}")
         return e
