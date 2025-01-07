@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2024/12/10
+    마지막 수정 날짜 : 2025/01/07
 """
 
 import pymysql
@@ -113,6 +113,10 @@ def delete_project(pid):
 
         # 프로젝트가 삭제되었으므로, 해당 프로젝트에 참여하고 있었던 모든 학생은 자동으로 프로젝트 참여 해제
         cur.execute("DELETE FROM project_user WHERE p_no = %s", (pid,))
+        connection.commit()
+
+        # Import 기능으로 불러온 프로젝트는 업무 정보도 같이 삭제
+        cur.execute("DELETE FROM work WHERE p_no = %s", (pid,))
         connection.commit()
         return True
     except Exception as e:
