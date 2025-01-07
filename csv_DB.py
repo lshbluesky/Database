@@ -63,7 +63,7 @@ def export_csv(pid):
 #     "doc_test" : "/var/lib/mysql-files/doc_t_10001_250105-153058.csv",
 #     "doc_report" : "/var/lib/mysql-files/doc_rep_10001_250105-153058.csv"
 # }
-# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict) 와 같이 함수를 호출하여 사용한다
+# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, -12345) 와 같이 함수를 호출하여 사용한다
 # 참고 : 딕셔너리의 키는 수정이 불가능하며, 값은 /var/lib/mysql-files 경로 대신에 실제 CSV 파일이 저장되어 있는 다른 경로로 변경할 수 있다
 def import_csv(file_paths, pid):
     connection = db_connect()
