@@ -191,6 +191,7 @@ def import_csv(file_paths, pid):
 
         if not import_fail:
             print("Info : 모든 CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하였습니다.")
+            print(f"Info : {len(import_ok)}개의 테이블을 DB에 불러왔습니다.")
             return True
         else:
             print(f"Info : {len(import_ok)}개의 테이블을 DB에 불러왔습니다.")
