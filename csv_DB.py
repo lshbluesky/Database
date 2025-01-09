@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/07
+    마지막 수정 날짜 : 2025/01/09
 """
 
 import pymysql
@@ -43,6 +43,8 @@ def export_csv(pid):
         save_csv_doc_rep = f"SELECT doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion FROM doc_report WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_rep_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_rep)
 
+        save_csv_doc_other = f"SELECT file_name, file_path, file_date, s_no, p_no FROM doc_other WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_o_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        cur.execute(save_csv_doc_other)
         return True
     except Exception as e:
         print(f"Error [export_csv] : {e}")
@@ -61,7 +63,8 @@ def export_csv(pid):
 #     "doc_require" : "/var/lib/mysql-files/doc_r_10001_250105-153058.csv",
 #     "doc_meeting" : "/var/lib/mysql-files/doc_m_10001_250105-153058.csv",
 #     "doc_test" : "/var/lib/mysql-files/doc_t_10001_250105-153058.csv",
-#     "doc_report" : "/var/lib/mysql-files/doc_rep_10001_250105-153058.csv"
+#     "doc_report" : "/var/lib/mysql-files/doc_rep_10001_250105-153058.csv",
+#     "doc_other" : "/var/lib/mysql-files/doc_o_10001_250105-153058.csv"
 # }
 # 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, -12345) 와 같이 함수를 호출하여 사용한다
 # 참고 : 딕셔너리의 키는 수정이 불가능하며, 값은 /var/lib/mysql-files 경로 대신에 실제 CSV 파일이 저장되어 있는 다른 경로로 변경할 수 있다
@@ -144,6 +147,15 @@ def import_csv(file_paths, pid):
             except Exception as e:
                 print(f"Error [import_csv :: doc_report] : {e}")
                 import_fail.append("doc_report")
+
+        if "doc_other" in file_paths:
+            try:
+                load_csv_doc_other = f"LOAD DATA INFILE '{file_paths['doc_other']}' INTO TABLE doc_other FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (file_name, file_path, file_date, s_no, p_no) SET file_no = FLOOR(RAND() * 10000000000)"
+                cur.execute(load_csv_doc_other)
+                import_ok.append("doc_other")
+            except Exception as e:
+                print(f"Error [import_csv :: doc_other] : {e}")
+                import_fail.append("doc_other")
 
         connection.commit()
 
