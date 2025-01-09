@@ -7,6 +7,7 @@
 import pymysql
 from datetime import datetime
 from mysql_connection import db_connect
+import project_DB
 
 # 프로젝트 정보를 CSV 파일로 내보내는 함수
 # 프로젝트 번호를 매개 변수로 받아서 해당 프로젝트의 정보, 업무, 진척도, 각 산출물 정보를 CSV 파일로 내보낸다
@@ -74,9 +75,10 @@ def export_csv(pid):
 #     "doc_report" : "/var/lib/mysql-files/doc_rep_10001_250105-153058.csv",
 #     "doc_other" : "/var/lib/mysql-files/doc_o_10001_250105-153058.csv"
 # }
-# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict) 와 같이 함수를 호출하여 사용한다
+# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid) 와 같이 함수를 호출하여 사용한다
+# 참고 : pid 매개 변수는 프로젝트를 Import 하기 전에 기존의 프로젝트 내용을 삭제하는 데에 사용된다
 # 참고 : 딕셔너리의 키는 수정이 불가능하며, 값은 /var/lib/mysql-files 경로 대신에 실제 CSV 파일이 저장되어 있는 다른 경로로 변경할 수 있다
-def import_csv(file_paths):
+def import_csv(file_paths, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -84,6 +86,8 @@ def import_csv(file_paths):
     import_fail = []
 
     try:
+        project_DB.delete_project(pid)
+
         if "student" in file_paths:
             try:
                 load_csv_student = f"LOAD DATA INFILE '{file_paths['student']}' IGNORE INTO TABLE student FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (s_no, s_id, s_pw, s_name, s_email, dno)"
