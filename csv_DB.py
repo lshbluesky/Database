@@ -82,18 +82,36 @@ def import_csv(file_paths, pid):
     import_fail = []
 
     try:
+        if "student" in file_paths:
+            try:
+                load_csv_student = f"LOAD DATA INFILE '{file_paths['student']}' IGNORE INTO TABLE student FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (s_no, s_id, s_pw, s_name, s_email, dno)"
+                cur.execute(load_csv_student)
+                import_ok.append("student")
+            except Exception as e:
+                print(f"Error [import_csv :: student] : {e}")
+                import_fail.append("student")
+
         if "project" in file_paths:
             try:
-                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_name, p_content, p_method, p_memcount, p_start, p_end, dno) SET p_no = {pid}"
+                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, dno)"
                 cur.execute(load_csv_project)
                 import_ok.append("project")
             except Exception as e:
                 print(f"Error [import_csv :: project] : {e}")
                 import_fail.append("project")
 
+        if "project_user" in file_paths:
+            try:
+                load_csv_project_user = f"LOAD DATA INFILE '{file_paths['project_user']}' INTO TABLE project_user FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, s_no, permission, role, grade)"
+                cur.execute(load_csv_project_user)
+                import_ok.append("project_user")
+            except Exception as e:
+                print(f"Error [import_csv :: project_user] : {e}")
+                import_fail.append("project_user")
+
         if "work" in file_paths:
             try:
-                load_csv_work = f"LOAD DATA INFILE '{file_paths['work']}' INTO TABLE work FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (w_name, w_person, w_start, w_end, w_checked) SET p_no = {pid}"
+                load_csv_work = f"LOAD DATA INFILE '{file_paths['work']}' INTO TABLE work FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (w_no, w_name, w_person, w_start, w_end, w_checked, p_no, s_no)"
                 cur.execute(load_csv_work)
                 import_ok.append("work")
             except Exception as e:
@@ -102,7 +120,7 @@ def import_csv(file_paths, pid):
 
         if "progress" in file_paths:
             try:
-                load_csv_progress = f"LOAD DATA INFILE '{file_paths['progress']}' INTO TABLE progress FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (group1, group2, group3, group4, work, output_file, manager, note, ratio, start_date, end_date, group1no, group2no, group3no, group4no) SET p_no = {pid}"
+                load_csv_progress = f"LOAD DATA INFILE '{file_paths['progress']}' INTO TABLE progress FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (progress_no, group1, group2, group3, group4, work, output_file, manager, note, ratio, start_date, end_date, group1no, group2no, group3no, group4no, p_no)"
                 cur.execute(load_csv_progress)
                 import_ok.append("progress")
             except Exception as e:
@@ -111,7 +129,7 @@ def import_csv(file_paths, pid):
 
         if "doc_summary" in file_paths:
             try:
-                load_csv_doc_s = f"LOAD DATA INFILE '{file_paths['doc_summary']}' INTO TABLE doc_summary FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_s_name, doc_s_overview, doc_s_goals, doc_s_range, doc_s_outcomes, doc_s_team, doc_s_stack, doc_s_start, doc_s_end, doc_s_date) SET p_no = {pid}"
+                load_csv_doc_s = f"LOAD DATA INFILE '{file_paths['doc_summary']}' INTO TABLE doc_summary FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_s_no, doc_s_name, doc_s_overview, doc_s_goals, doc_s_range, doc_s_outcomes, doc_s_team, doc_s_stack, doc_s_start, doc_s_end, doc_s_date, p_no)"
                 cur.execute(load_csv_doc_s)
                 import_ok.append("doc_summary")
             except Exception as e:
@@ -120,7 +138,7 @@ def import_csv(file_paths, pid):
 
         if "doc_require" in file_paths:
             try:
-                load_csv_doc_r = f"LOAD DATA INFILE '{file_paths['doc_require']}' INTO TABLE doc_require FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_r_f_name, doc_r_f_content, doc_r_f_priority, doc_r_nf_name, doc_r_nf_content, doc_r_nf_priority, doc_r_s_name, doc_r_s_content, doc_r_date) SET p_no = {pid}"
+                load_csv_doc_r = f"LOAD DATA INFILE '{file_paths['doc_require']}' INTO TABLE doc_require FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_r_no, doc_r_f_name, doc_r_f_content, doc_r_f_priority, doc_r_nf_name, doc_r_nf_content, doc_r_nf_priority, doc_r_s_name, doc_r_s_content, doc_r_date, p_no)"
                 cur.execute(load_csv_doc_r)
                 import_ok.append("doc_require")
             except Exception as e:
@@ -129,7 +147,7 @@ def import_csv(file_paths, pid):
 
         if "doc_meeting" in file_paths:
             try:
-                load_csv_doc_m = f"LOAD DATA INFILE '{file_paths['doc_meeting']}' INTO TABLE doc_meeting FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_m_title, doc_m_date, doc_m_loc, doc_m_member, doc_m_manager, doc_m_content, doc_m_result) SET p_no = {pid}"
+                load_csv_doc_m = f"LOAD DATA INFILE '{file_paths['doc_meeting']}' INTO TABLE doc_meeting FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_m_no, doc_m_title, doc_m_date, doc_m_loc, doc_m_member, doc_m_manager, doc_m_content, doc_m_result, p_no)"
                 cur.execute(load_csv_doc_m)
                 import_ok.append("doc_meeting")
             except Exception as e:
@@ -138,7 +156,7 @@ def import_csv(file_paths, pid):
 
         if "doc_test" in file_paths:
             try:
-                load_csv_doc_t = f"LOAD DATA INFILE '{file_paths['doc_test']}' INTO TABLE doc_test FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_t_name, doc_t_start, doc_t_end, doc_t_pass) SET p_no = {pid}"
+                load_csv_doc_t = f"LOAD DATA INFILE '{file_paths['doc_test']}' INTO TABLE doc_test FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_t_no, doc_t_name, doc_t_start, doc_t_end, doc_t_pass, p_no)"
                 cur.execute(load_csv_doc_t)
                 import_ok.append("doc_test")
             except Exception as e:
@@ -147,7 +165,7 @@ def import_csv(file_paths, pid):
 
         if "doc_report" in file_paths:
             try:
-                load_csv_doc_rep = f"LOAD DATA INFILE '{file_paths['doc_report']}' INTO TABLE doc_report FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion) SET p_no = {pid}"
+                load_csv_doc_rep = f"LOAD DATA INFILE '{file_paths['doc_report']}' INTO TABLE doc_report FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_rep_no, doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion, p_no)"
                 cur.execute(load_csv_doc_rep)
                 import_ok.append("doc_report")
             except Exception as e:
@@ -156,7 +174,7 @@ def import_csv(file_paths, pid):
 
         if "doc_other" in file_paths:
             try:
-                load_csv_doc_other = f"LOAD DATA INFILE '{file_paths['doc_other']}' INTO TABLE doc_other FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (file_name, file_path, file_date, s_no, p_no) SET file_no = FLOOR(RAND() * 10000000000)"
+                load_csv_doc_other = f"LOAD DATA INFILE '{file_paths['doc_other']}' INTO TABLE doc_other FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (file_no, file_name, file_path, file_date, s_no, p_no)"
                 cur.execute(load_csv_doc_other)
                 import_ok.append("doc_other")
             except Exception as e:
