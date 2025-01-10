@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/09
+    마지막 수정 날짜 : 2025/01/10
 """
 
 import pymysql
@@ -11,13 +11,13 @@ import project_DB
 
 # 프로젝트 정보를 CSV 파일로 내보내는 함수
 # 프로젝트 번호를 매개 변수로 받아서 해당 프로젝트의 정보, 업무, 진척도, 각 산출물 정보를 CSV 파일로 내보낸다
-# 내보낸 CSV 파일은 /var/lib/mysql-files/ 경로에 저장된다
+# 내보낸 CSV 파일은 /var/lib/mysql/ 경로에 저장된다
 def export_csv(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        csv_path = "/var/lib/mysql-files/"
+        csv_path = "/var/lib/mysql/"
         save_time = datetime.now().strftime("%y%m%d-%H%M%S")
 
         save_csv_student = f"SELECT s_no, s_id, s_pw, s_name, s_email, dno FROM student INTO OUTFILE '{csv_path}student_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
