@@ -11,13 +11,13 @@ import project_DB
 
 # 프로젝트 정보를 CSV 파일로 내보내는 함수
 # 프로젝트 번호를 매개 변수로 받아서 해당 프로젝트의 정보, 업무, 진척도, 각 산출물 정보를 CSV 파일로 내보낸다
-# 내보낸 CSV 파일은 /var/lib/mysql/ 경로에 저장된다
+# 내보낸 CSV 파일은 /var/lib/mysql/csv/ 경로에 저장된다
 def export_csv(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        csv_path = "/var/lib/mysql/"
+        csv_path = "/var/lib/mysql/csv/"
         save_time = datetime.now().strftime("%y%m%d-%H%M%S")
 
         save_csv_student = f"SELECT s_no, s_id, s_pw, s_name, s_email, dno FROM student INTO OUTFILE '{csv_path}student_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
@@ -63,17 +63,17 @@ def export_csv(pid):
 # CSV 파일로부터 프로젝트 정보를 불러와서 DB에 저장하는 함수
 # {산출물 종류(문자열) : CSV 파일 경로(문자열)} 형태의 딕셔너리를 매개 변수로 받아서 CSV 파일의 내용을 DB에 저장한다
 # csv_dict = {
-#     "student" : "/var/lib/mysql-files/student_10001_250105-153058.csv",
-#     "project" : "/var/lib/mysql-files/project_10001_250105-153058.csv",
-#     "project_user" : "/var/lib/mysql-files/project_user_10001_250105-153058.csv",
-#     "work" : "/var/lib/mysql-files/work_10001_250105-153058.csv",
-#     "progress" : "/var/lib/mysql-files/progress_10001_250105-153058.csv",
-#     "doc_summary" : "/var/lib/mysql-files/doc_s_10001_250105-153058.csv",
-#     "doc_require" : "/var/lib/mysql-files/doc_r_10001_250105-153058.csv",
-#     "doc_meeting" : "/var/lib/mysql-files/doc_m_10001_250105-153058.csv",
-#     "doc_test" : "/var/lib/mysql-files/doc_t_10001_250105-153058.csv",
-#     "doc_report" : "/var/lib/mysql-files/doc_rep_10001_250105-153058.csv",
-#     "doc_other" : "/var/lib/mysql-files/doc_o_10001_250105-153058.csv"
+#     "student" : "/var/lib/mysql/csv/student_10001_250105-153058.csv",
+#     "project" : "/var/lib/mysql/csv/project_10001_250105-153058.csv",
+#     "project_user" : "/var/lib/mysql/csv/project_user_10001_250105-153058.csv",
+#     "work" : "/var/lib/mysql/csv/work_10001_250105-153058.csv",
+#     "progress" : "/var/lib/mysql/csv/progress_10001_250105-153058.csv",
+#     "doc_summary" : "/var/lib/mysql/csv/doc_s_10001_250105-153058.csv",
+#     "doc_require" : "/var/lib/mysql/csv/doc_r_10001_250105-153058.csv",
+#     "doc_meeting" : "/var/lib/mysql/csv/doc_m_10001_250105-153058.csv",
+#     "doc_test" : "/var/lib/mysql/csv/doc_t_10001_250105-153058.csv",
+#     "doc_report" : "/var/lib/mysql/csv/doc_rep_10001_250105-153058.csv",
+#     "doc_other" : "/var/lib/mysql/csv/doc_o_10001_250105-153058.csv"
 # }
 # 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid) 와 같이 함수를 호출하여 사용한다
 # 참고 : pid 매개 변수는 프로젝트를 Import 하기 전에 기존의 프로젝트 내용을 삭제하는 데에 사용된다
