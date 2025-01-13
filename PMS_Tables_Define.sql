@@ -150,6 +150,24 @@ CREATE TABLE doc_report (
  p_no INT NOT NULL
 );
 
+CREATE TABLE permission (
+ p_no INT NOT NULL,
+ s_no INT NOT NULL,
+ leader TINYINT NOT NULL,
+ ro TINYINT NOT NULL,
+ user TINYINT NOT NULL,
+ wbs TINYINT NOT NULL,
+ od TINYINT NOT NULL,
+ mm TINYINT NOT NULL,
+ ut TINYINT NOT NULL,
+ rs TINYINT NOT NULL,
+ rp TINYINT NOT NULL,
+ om TINYINT NOT NULL,
+ task TINYINT NOT NULL,
+ llm TINYINT NOT NULL,
+ PRIMARY KEY (p_no, s_no)
+);
+
 ALTER TABLE student ADD CONSTRAINT FK_dept_TO_student_1 FOREIGN KEY (dno) REFERENCES dept (dno);
 ALTER TABLE project_user ADD CONSTRAINT FK_project_TO_project_user_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE project_user ADD CONSTRAINT FK_student_TO_project_user_1 FOREIGN KEY (s_no) REFERENCES student (s_no) ON DELETE CASCADE;
@@ -163,6 +181,7 @@ ALTER TABLE doc_meeting ADD CONSTRAINT FK_project_TO_doc_meeting_1 FOREIGN KEY (
 ALTER TABLE doc_summary ADD CONSTRAINT FK_project_TO_doc_summary_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE doc_test ADD CONSTRAINT FK_project_TO_doc_test_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE doc_report ADD CONSTRAINT FK_project_TO_doc_report_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
+ALTER TABLE permission ADD CONSTRAINT FK_project_user_TO_permission FOREIGN KEY (p_no, s_no) REFERENCES project_user (p_no, s_no) ON DELETE CASCADE;
 
 ALTER TABLE project_user ADD CONSTRAINT CK_project_user_grade CHECK (grade IN ('A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F'));
 
