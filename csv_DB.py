@@ -77,7 +77,7 @@ def export_csv(pid):
 # }
 # 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid) 와 같이 함수를 호출하여 사용한다
 # 참고 : pid 매개 변수는 프로젝트를 Import 하기 전에 기존의 프로젝트 내용을 삭제하는 데에 사용된다
-# 참고 : 딕셔너리의 키는 수정이 불가능하며, 값은 /var/lib/mysql-files 경로 대신에 실제 CSV 파일이 저장되어 있는 다른 경로로 변경할 수 있다
+# 참고 : 딕셔너리의 키는 수정이 불가능하며, CSV 파일은 /var/lib/mysql/csv 경로에 저장되어 있어야 한다
 def import_csv(file_paths, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
