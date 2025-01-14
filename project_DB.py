@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/01/09
+    마지막 수정 날짜 : 2025/01/14
 """
 
 import pymysql
@@ -211,7 +211,6 @@ def fetch_project_user(pid):
     finally:
         cur.close()
         connection.close()
-
 
 # 프로젝트의 중요 정보를 수정할 때 사용자의 권한(PM 권한)을 확인하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
