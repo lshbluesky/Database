@@ -117,6 +117,40 @@ def add_manual_permission(pid, univ_id, leader, ro, user, wbs, od, mm, ut, rs, r
         cur.close()
         connection.close()
 
+# 사용자의 권한 정보를 수정하는 함수
+# 프로젝트 번호, 학번, 12개의 권한 정보를 매개 변수로 받는다
+def edit_permission(pid, univ_id, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        edit_permission = """
+        UPDATE permission
+        SET leader = %s,
+            ro = %s,
+            user = %s,
+            wbs = %s,
+            od = %s,
+            mm = %s,
+            ut = %s,
+            rs = %s,
+            rp = %s,
+            om = %s,
+            task = %s,
+            llm = %s
+        WHERE p_no = %s AND s_no = %s
+        """
+        cur.execute(edit_permission, (leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm, pid, univ_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [edit_permission] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트의 중요 정보를 수정할 때 사용자가 팀장(리더) 권한을 보유하고 있는지 확인(검증)하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
 def validate_leader_permission(pid, univ_id):
