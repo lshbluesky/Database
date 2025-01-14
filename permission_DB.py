@@ -7,6 +7,116 @@
 import pymysql
 from mysql_connection import db_connect
 
+# 팀장의 권한 정보를 추가하는 함수
+# 프로젝트 번호와 학번을 매개 변수로 받는다
+def add_leader_permission(pid, univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_leader_permission = """
+        INSERT INTO permission(p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm)
+        VALUES (%s, %s, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        """
+        cur.execute(add_leader_permission, (pid, univ_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [add_leader_permission] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 관전자 모드 사용자의 권한 정보를 추가하는 함수
+# 프로젝트 번호와 학번을 매개 변수로 받는다
+def add_ro_permission(pid, univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_ro_permission = """
+        INSERT INTO permission(p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm)
+        VALUES (%s, %s, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        """
+        cur.execute(add_ro_permission, (pid, univ_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [add_ro_permission] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 관전자 모드 사용자의 권한 정보를 추가하는 함수 Ver2 (ro 컬럼 대신에 다른 권한을 모두 읽기 전용으로 설정)
+# 프로젝트 번호와 학번을 매개 변수로 받는다
+def add_ro_permission2(pid, univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_ro_permission2 = """
+        INSERT INTO permission(p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm)
+        VALUES (%s, %s, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0)
+        """
+        cur.execute(add_ro_permission2, (pid, univ_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [add_ro_permission2] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 일반적인 팀원의 기본값 권한 정보를 추가하는 함수
+# 프로젝트 번호와 학번을 매개 변수로 받는다
+def add_default_user_permission(pid, univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_default_user_permission = """
+        INSERT INTO permission(p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm)
+        VALUES (%s, %s, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2)
+        """
+        cur.execute(add_default_user_permission, (pid, univ_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [add_default_user_permission] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 사용자의 권한 정보를 수동으로 추가하는 함수
+# 프로젝트 번호, 학번, 12개의 권한 정보를 매개 변수로 받는다
+def add_manual_permission(pid, univ_id, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_manual_permission = """
+        INSERT INTO permission(p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cur.execute(add_manual_permission, (pid, univ_id, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [add_manual_permission] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트의 중요 정보를 수정할 때 사용자가 팀장(리더) 권한을 보유하고 있는지 확인(검증)하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
 def validate_leader_permission(pid, univ_id):
