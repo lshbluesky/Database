@@ -151,6 +151,40 @@ def edit_permission(pid, univ_id, leader, ro, user, wbs, od, mm, ut, rs, rp, om,
         cur.close()
         connection.close()
 
+# 특정 프로젝트에서 모든 팀원의 모든 권한을 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_all_permissions_of_all_users(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM permission WHERE p_no = %s", (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_all_permissions_of_all_users] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 특정 프로젝트에서 특정 팀원의 모든 권한을 조회하는 함수
+# 프로젝트 번호와 학번을 매개 변수로 받는다
+def fetch_all_permissions_of_user(pid, univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM permission WHERE p_no = %s AND s_no = %s", (pid, univ_id))
+        result = cur.fetchone()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_all_permissions_of_user] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트의 중요 정보를 수정할 때 사용자가 팀장(리더) 권한을 보유하고 있는지 확인(검증)하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
 def validate_leader_permission(pid, univ_id):
