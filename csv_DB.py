@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/10
+    마지막 수정 날짜 : 2025/01/15
 """
 
 import pymysql
@@ -28,6 +28,9 @@ def export_csv(pid):
 
         save_csv_project_user = f"SELECT p_no, s_no, permission, role, grade FROM project_user WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_user_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_project_user)
+
+        save_csv_permission = f"SELECT p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm FROM permission WHERE p_no = {pid} INTO OUTFILE '{csv_path}permission_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        cur.execute(save_csv_permission)
 
         save_csv_work = f"SELECT w_no, w_name, w_person, w_start, w_end, w_checked, p_no, s_no FROM work WHERE p_no = {pid} INTO OUTFILE '{csv_path}work_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_work)
@@ -66,6 +69,7 @@ def export_csv(pid):
 #     "student" : "/var/lib/mysql/csv/student_10001_250105-153058.csv",
 #     "project" : "/var/lib/mysql/csv/project_10001_250105-153058.csv",
 #     "project_user" : "/var/lib/mysql/csv/project_user_10001_250105-153058.csv",
+#     "permission" : "/var/lib/mysql/csv/permission_10001_250105-153058.csv",
 #     "work" : "/var/lib/mysql/csv/work_10001_250105-153058.csv",
 #     "progress" : "/var/lib/mysql/csv/progress_10001_250105-153058.csv",
 #     "doc_summary" : "/var/lib/mysql/csv/doc_s_10001_250105-153058.csv",
@@ -114,6 +118,15 @@ def import_csv(file_paths, pid):
             except Exception as e:
                 print(f"Error [import_csv :: project_user] : {e}")
                 import_fail.append("project_user")
+
+        if "permission" in file_paths:
+            try:
+                load_csv_permission = f"LOAD DATA INFILE '{file_paths['permission']}' INTO TABLE permission FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm)"
+                cur.execute(load_csv_permission)
+                import_ok.append("permission")
+            except Exception as e:
+                print(f"Error [import_csv :: permission] : {e}")
+                import_fail.append("permission")
 
         if "work" in file_paths:
             try:
