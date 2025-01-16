@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : wbs_DB.py
-    마지막 수정 날짜 : 2025/01/05
+    마지막 수정 날짜 : 2025/01/16
 """
 
 import pymysql
@@ -65,6 +65,37 @@ def delete_all_wbs(pid):
     except Exception as e:
         connection.rollback()
         print(f"Error [delete_all_wbs] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 특정 프로젝트의 WBS에서 대분류 항목별로 진척률의 평균을 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_wbs_ratio(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        fetch_wbs_ratio = """
+        SELECT group1no,
+            CASE group1no
+                WHEN 1 THEN '계획'
+                WHEN 2 THEN '분석'
+                WHEN 3 THEN '설계'
+                WHEN 4 THEN '구현'
+                WHEN 5 THEN '테스트'
+                WHEN 6 THEN '유지보수' END AS group1,
+            ROUND(AVG(ratio)) AS ratio
+        FROM progress
+        WHERE p_no = %s
+        GROUP BY group1no
+        """
+        cur.execute(fetch_wbs_ratio, (pid,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_wbs_ratio] : {e}")
         return e
     finally:
         cur.close()
