@@ -85,7 +85,8 @@ def fetch_wbs_ratio(pid):
                 WHEN 3 THEN '설계'
                 WHEN 4 THEN '구현'
                 WHEN 5 THEN '테스트'
-                WHEN 6 THEN '유지보수' END AS group1,
+                WHEN 6 THEN '유지보수'
+                ELSE '기타' END AS group1,
             CAST(ROUND(AVG(ratio)) AS UNSIGNED) AS ratio
         FROM progress
         WHERE p_no = %s
