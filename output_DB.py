@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/01/05
+    마지막 수정 날짜 : 2025/01/17
 """
 
 import pymysql
@@ -717,7 +717,6 @@ def fetch_all_other_documents(pid):
         cur.close()
         connection.close()
 
-
 # 특정 기타 산출물을 조회하는 함수
 # 산출물 고유 번호를 매게 변수로 받는다
 def fetch_one_other_documents(file_unique_id):
@@ -734,6 +733,23 @@ def fetch_one_other_documents(file_unique_id):
     except Exception as e:
         print(f"Error [fetch_one_other_documents] : {e}")
         return None
+    finally:
+        cur.close()
+        connection.close()
+
+# 기타 산출물 테이블에서 산출물의 종류를 확인하는 함수
+# 산출물 고유 번호를 매개 변수로 받는다
+def fetch_document_type(file_unique_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(file_path, '/', 5), '/', -1) AS doc_type FROM doc_other WHERE file_no = %s", (file_unique_id,))
+        result = cur.fetchone()
+        return result['doc_type']
+    except Exception as e:
+        print(f"Error [fetch_document_type] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
