@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : wbs_DB.py
-    마지막 수정 날짜 : 2025/01/16
+    마지막 수정 날짜 : 2025/01/17
 """
 
 import pymysql
@@ -86,7 +86,7 @@ def fetch_wbs_ratio(pid):
                 WHEN 4 THEN '구현'
                 WHEN 5 THEN '테스트'
                 WHEN 6 THEN '유지보수' END AS group1,
-            ROUND(AVG(ratio)) AS ratio
+            CAST(ROUND(AVG(ratio)) AS UNSIGNED) AS ratio
         FROM progress
         WHERE p_no = %s
         GROUP BY group1no
