@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : wbs_DB.py
-    마지막 수정 날짜 : 2025/01/17
+    마지막 수정 날짜 : 2025/01/18
 """
 
 import pymysql
