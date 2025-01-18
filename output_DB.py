@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/01/17
+    마지막 수정 날짜 : 2025/01/18
 """
 
 import pymysql
@@ -744,6 +744,13 @@ def fetch_document_type(file_unique_id):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_other WHERE file_no = %s", (file_unique_id,))
+        row = cur.fetchone()
+
+        if row['cnt'] == 0:
+            print(f"Error [fetch_document_type] : File Unique ID {file_unique_id} does not exist.")
+            return False
+
         cur.execute("SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(file_path, '/', 5), '/', -1) AS doc_type FROM doc_other WHERE file_no = %s", (file_unique_id,))
         result = cur.fetchone()
         return result['doc_type']
