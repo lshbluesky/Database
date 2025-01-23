@@ -25,6 +25,7 @@ CREATE TABLE project_user (
  permission BOOLEAN NOT NULL,
  role VARCHAR(100) NULL,
  grade VARCHAR(2) NULL,
+ comment TEXT NULL,
  PRIMARY KEY (p_no, s_no)
 );
 
@@ -65,6 +66,7 @@ CREATE TABLE project (
  p_memcount INT NOT NULL,
  p_start DATE NOT NULL,
  p_end DATE NOT NULL,
+ p_wizard BOOLEAN NULL,
  dno INT NOT NULL
 );
 
