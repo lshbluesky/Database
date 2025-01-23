@@ -250,6 +250,24 @@ def is_uid_exists(uid):
         cur.close()
         connection.close()
 
+# 프로젝트 Setup Wizard 완료 여부를 True(1)로 저장하는 함수
+# 수정하려는 프로젝트의 내용과 프로젝트 고유 번호를 매개 변수로 받는다
+def complete_setup_wizard(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE project SET p_wizard = 1 WHERE p_no = %s", (pid,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [complete_setup_wizard] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # LLM에 제공할 프로젝트의 모든 정보를 반환하는 함수
 # 프로젝트 번호를 매개 변수로 받아서 프로젝트와 업무, 진척도, 모든 산출물 테이블을 각각 조회하고 JSON으로 가공하여 반환한다
 def fetch_project_for_LLM(pid):
