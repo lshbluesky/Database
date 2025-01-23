@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/01/14
+    마지막 수정 날짜 : 2025/01/23
 """
 
 import pymysql
@@ -21,10 +21,10 @@ def init_project(payload, pid):
 
     try:
         add_project = """
-        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, dno)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, 10))
+        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10))
         connection.commit()
         return True
     except Exception as e:
@@ -54,10 +54,11 @@ def edit_project(payload):
             p_memcount = %s,
             p_start = %s,
             p_end = %s,
+            p_wizard = %s,
             dno = %s
         WHERE p_no = %s
         """
-        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, 10, payload.pid))
+        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.pid))
         connection.commit()
         return True
     except Exception as e:
@@ -76,7 +77,7 @@ def fetch_project_info(univ_id):
 
     try:
         fetch_project_info = """
-        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end
+        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard
         FROM project p, project_user u
         WHERE p.p_no = u.p_no
         AND u.s_no = %s
@@ -132,8 +133,8 @@ def add_project_user(pid, univ_id, permission, role):
 
     try:
         add_project_user = """
-        INSERT INTO project_user(p_no, s_no, permission, role, grade)
-        VALUES (%s, %s, %s, %s, NULL)
+        INSERT INTO project_user(p_no, s_no, permission, role, grade, comment)
+        VALUES (%s, %s, %s, %s, NULL, NULL)
         """
         cur.execute(add_project_user, (pid, univ_id, permission, role))
         connection.commit()
