@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/01/23
+    마지막 수정 날짜 : 2025/01/25
 """
 
 import pymysql
@@ -87,6 +87,29 @@ def fetch_project_info(univ_id):
         return result
     except Exception as e:
         print(f"Error [fetch_project_info] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 정보 조회 함수 (교수 전용)
+# 교수의 교번을 매개 변수로 받아서 교수가 담당하고 있는 학생의 모든 프로젝트를 조회한다
+def fetch_project_info_for_professor(f_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        fetch_project_info_for_professor = """
+        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard
+        FROM project p, project_user u
+        WHERE p.p_no = u.p_no
+        AND u.f_no = %s
+        """
+        cur.execute(fetch_project_info_for_professor, (f_no,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_project_info_for_professor] : {e}")
         return e
     finally:
         cur.close()
