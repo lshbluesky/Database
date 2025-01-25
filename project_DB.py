@@ -100,7 +100,7 @@ def fetch_project_info_for_professor(f_no):
 
     try:
         fetch_project_info_for_professor = """
-        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard
+        SELECT DISTINCT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard
         FROM project p, project_user u
         WHERE p.p_no = u.p_no
         AND u.f_no = %s
