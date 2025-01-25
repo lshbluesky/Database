@@ -150,16 +150,16 @@ def delete_project(pid):
 # 프로젝트 참여자 추가(팀원 초대) 함수
 # 프로젝트 번호, 학번, PM 권한 여부(0/1), 역할을 매개 변수로 받는다
 # 주의사항 : 초대하려는 사용자(학생)는 회원가입이 이미 완료되어 있어야 한다
-def add_project_user(pid, univ_id, permission, role):
+def add_project_user(pid, univ_id, permission, role, f_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_project_user = """
-        INSERT INTO project_user(p_no, s_no, permission, role, grade, comment)
-        VALUES (%s, %s, %s, %s, NULL, NULL)
+        INSERT INTO project_user(p_no, s_no, permission, role, grade, comment, f_no)
+        VALUES (%s, %s, %s, %s, NULL, NULL, %s)
         """
-        cur.execute(add_project_user, (pid, univ_id, permission, role))
+        cur.execute(add_project_user, (pid, univ_id, permission, role, f_no))
         connection.commit()
         return True
     except Exception as e:
