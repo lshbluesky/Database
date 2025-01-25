@@ -11,12 +11,14 @@ CREATE TABLE student (
  dno INT NOT NULL
 );
 
-CREATE TABLE admin (
- a_id VARCHAR(20) NOT NULL PRIMARY KEY,
- a_pw VARCHAR(255) NOT NULL,
- a_name VARCHAR(20) NOT NULL,
- a_email VARCHAR(255) NOT NULL,
- a_token VARCHAR(30) NULL UNIQUE
+CREATE TABLE professor (
+ f_no INT NOT NULL PRIMARY KEY,
+ f_id VARCHAR(20) NOT NULL UNIQUE,
+ f_pw VARCHAR(255) NOT NULL,
+ f_name VARCHAR(20) NOT NULL,
+ f_email VARCHAR(255) NOT NULL,
+ f_token VARCHAR(30) NULL UNIQUE,
+ dno INT NOT NULL
 );
 
 CREATE TABLE project_user (
@@ -171,8 +173,10 @@ CREATE TABLE permission (
 );
 
 ALTER TABLE student ADD CONSTRAINT FK_dept_TO_student_1 FOREIGN KEY (dno) REFERENCES dept (dno);
+ALTER TABLE professor ADD CONSTRAINT FK_dept_TO_professor_1 FOREIGN KEY (dno) REFERENCES dept (dno);
 ALTER TABLE project_user ADD CONSTRAINT FK_project_TO_project_user_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE project_user ADD CONSTRAINT FK_student_TO_project_user_1 FOREIGN KEY (s_no) REFERENCES student (s_no) ON DELETE CASCADE;
+ALTER TABLE project_user ADD CONSTRAINT FK_professor_TO_project_user_1 FOREIGN KEY (f_no) REFERENCES professor (f_no) ON DELETE SET NULL;
 ALTER TABLE doc_other ADD CONSTRAINT FK_student_TO_doc_other_1 FOREIGN KEY (s_no) REFERENCES student (s_no);
 ALTER TABLE doc_other ADD CONSTRAINT FK_project_TO_doc_other_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE progress ADD CONSTRAINT FK_project_TO_progress_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
