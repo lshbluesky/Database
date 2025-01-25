@@ -58,6 +58,8 @@ def export_csv(pid):
 
         save_csv_doc_other = f"SELECT file_no, file_name, file_path, file_date, s_no, p_no FROM doc_other WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_o_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_other)
+
+        print(f"Info : DB에 저장된 프로젝트 관련 정보를 모두 CSV 파일로 정상적으로 내보냈습니다. 내보낸 시간 : [{save_time}]")
         return True
     except Exception as e:
         print(f"Error [export_csv] : {e}")
