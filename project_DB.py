@@ -171,14 +171,14 @@ def add_project_user(pid, univ_id, permission, role, f_no):
         connection.close()
 
 # 프로젝트 참여자 수정(팀원 정보 수정) 함수
-# 수정하려는 팀원의 학번, 프로젝트 번호, 역할을 매개 변수로 받는다
-def edit_project_user(univ_id, pid, role):
+# 수정하려는 팀원의 학번, 프로젝트 번호, 역할, 담당 교수의 교번을 매개 변수로 받는다
+def edit_project_user(univ_id, pid, role, f_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         # 프로젝트 참여 테이블에서 프로젝트 번호와 학번으로 수정할 팀원을 선택하고 역할을 수정
-        cur.execute("UPDATE project_user SET role = %s WHERE p_no = %s AND s_no = %s", (role, pid, univ_id))
+        cur.execute("UPDATE project_user SET role = %s, f_no = %s WHERE p_no = %s AND s_no = %s", (role, f_no, pid, univ_id))
         connection.commit()
         return True
     except Exception as e:
