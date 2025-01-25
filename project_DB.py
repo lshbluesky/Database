@@ -148,7 +148,7 @@ def delete_project(pid):
         connection.close()
 
 # 프로젝트 참여자 추가(팀원 초대) 함수
-# 프로젝트 번호, 학번, PM 권한 여부(0/1), 역할을 매개 변수로 받는다
+# 프로젝트 번호, 학번, PM 권한 여부(0/1), 역할, 담당 교수의 교번을 매개 변수로 받는다
 # 주의사항 : 초대하려는 사용자(학생)는 회원가입이 이미 완료되어 있어야 한다
 def add_project_user(pid, univ_id, permission, role, f_no):
     connection = db_connect()
