@@ -149,18 +149,18 @@ def delete_project(pid):
         connection.close()
 
 # 프로젝트 참여자 추가(팀원 초대) 함수
-# 프로젝트 번호, 학번, PM 권한 여부(0/1), 역할, 담당 교수의 교번을 매개 변수로 받는다
+# 프로젝트 번호, 학번, PM 권한 여부(0/1), 역할을 매개 변수로 받는다
 # 주의사항 : 초대하려는 사용자(학생)는 회원가입이 이미 완료되어 있어야 한다
-def add_project_user(pid, univ_id, permission, role, f_no):
+def add_project_user(pid, univ_id, permission, role):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_project_user = """
-        INSERT INTO project_user(p_no, s_no, permission, role, grade, comment, f_no)
-        VALUES (%s, %s, %s, %s, NULL, NULL, %s)
+        INSERT INTO project_user(p_no, s_no, permission, role, grade, comment)
+        VALUES (%s, %s, %s, %s, NULL, NULL)
         """
-        cur.execute(add_project_user, (pid, univ_id, permission, role, f_no))
+        cur.execute(add_project_user, (pid, univ_id, permission, role))
         connection.commit()
         return True
     except Exception as e:
@@ -172,14 +172,14 @@ def add_project_user(pid, univ_id, permission, role, f_no):
         connection.close()
 
 # 프로젝트 참여자 수정(팀원 정보 수정) 함수
-# 수정하려는 팀원의 학번, 프로젝트 번호, 역할, 담당 교수의 교번을 매개 변수로 받는다
-def edit_project_user(univ_id, pid, role, f_no):
+# 수정하려는 팀원의 학번, 프로젝트 번호, 역할을 매개 변수로 받는다
+def edit_project_user(univ_id, pid, role):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         # 프로젝트 참여 테이블에서 프로젝트 번호와 학번으로 수정할 팀원을 선택하고 역할을 수정
-        cur.execute("UPDATE project_user SET role = %s, f_no = %s WHERE p_no = %s AND s_no = %s", (role, f_no, pid, univ_id))
+        cur.execute("UPDATE project_user SET role = %s WHERE p_no = %s AND s_no = %s", (role, pid, univ_id))
         connection.commit()
         return True
     except Exception as e:
