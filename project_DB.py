@@ -55,10 +55,11 @@ def edit_project(payload):
             p_start = %s,
             p_end = %s,
             p_wizard = %s,
-            dno = %s
+            dno = %s,
+            f_no = %s            
         WHERE p_no = %s
         """
-        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.pid))
+        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.prof_id, payload.pid))
         connection.commit()
         return True
     except Exception as e:
