@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/25
+    마지막 수정 날짜 : 2025/01/26
 """
 
 import pymysql
@@ -26,10 +26,10 @@ def export_csv(pid):
         save_csv_professor = f"SELECT f_no, f_id, f_pw, f_name, f_email, dno FROM professor INTO OUTFILE '{csv_path}professor_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_professor)
 
-        save_csv_project = f"SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno FROM project WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        save_csv_project = f"SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno, f_no FROM project WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_project)
 
-        save_csv_project_user = f"SELECT p_no, s_no, permission, role, grade, comment, f_no FROM project_user WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_user_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        save_csv_project_user = f"SELECT p_no, s_no, permission, role, grade, comment FROM project_user WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_user_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_project_user)
 
         save_csv_permission = f"SELECT p_no, s_no, leader, ro, user, wbs, od, mm, ut, rs, rp, om, task, llm FROM permission WHERE p_no = {pid} INTO OUTFILE '{csv_path}permission_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
@@ -118,7 +118,7 @@ def import_csv(file_paths, pid):
 
         if "project" in file_paths:
             try:
-                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno)"
+                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno, f_no)"
                 cur.execute(load_csv_project)
                 import_ok.append("project")
             except Exception as e:
@@ -127,7 +127,7 @@ def import_csv(file_paths, pid):
 
         if "project_user" in file_paths:
             try:
-                load_csv_project_user = f"LOAD DATA INFILE '{file_paths['project_user']}' INTO TABLE project_user FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, s_no, permission, role, grade, comment, f_no)"
+                load_csv_project_user = f"LOAD DATA INFILE '{file_paths['project_user']}' INTO TABLE project_user FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, s_no, permission, role, grade, comment)"
                 cur.execute(load_csv_project_user)
                 import_ok.append("project_user")
             except Exception as e:
