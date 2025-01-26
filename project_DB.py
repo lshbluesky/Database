@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/01/25
+    마지막 수정 날짜 : 2025/01/26
 """
 
 import pymysql
@@ -100,10 +100,11 @@ def fetch_project_info_for_professor(f_no):
 
     try:
         fetch_project_info_for_professor = """
-        SELECT DISTINCT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard
-        FROM project p, project_user u
-        WHERE p.p_no = u.p_no
-        AND u.f_no = %s
+        SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard
+        FROM project
+        WHERE p_no IN (SELECT DISTINCT p_no
+            FROM project_user
+            WHERE f_no = %s);
         """
         cur.execute(fetch_project_info_for_professor, (f_no,))
         result = cur.fetchall()
