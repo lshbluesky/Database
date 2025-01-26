@@ -69,7 +69,8 @@ CREATE TABLE project (
  p_start DATE NOT NULL,
  p_end DATE NOT NULL,
  p_wizard BOOLEAN NULL,
- dno INT NOT NULL
+ dno INT NOT NULL,
+ f_no INT NULL
 );
 
 CREATE TABLE work (
