@@ -21,10 +21,9 @@ def init_project(payload, pid):
 
     try:
         add_project = """
-        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno, f_no)
         """
-        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10))
+        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.prof_id))
         connection.commit()
         return True
     except Exception as e:
