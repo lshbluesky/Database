@@ -102,8 +102,8 @@ def fetch_project_info_for_professor(f_no):
         fetch_project_info_for_professor = """
         SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard
         FROM project
-        WHERE p_no IN (SELECT DISTINCT p_no
-            FROM project_user
+        WHERE p_no IN (SELECT p_no
+            FROM project
             WHERE f_no = %s);
         """
         cur.execute(fetch_project_info_for_professor, (f_no,))
