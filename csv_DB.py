@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/23
+    마지막 수정 날짜 : 2025/01/26
 """
 
 import pymysql
@@ -23,7 +23,10 @@ def export_csv(pid):
         save_csv_student = f"SELECT s_no, s_id, s_pw, s_name, s_email, dno FROM student INTO OUTFILE '{csv_path}student_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_student)
 
-        save_csv_project = f"SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno FROM project WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        save_csv_professor = f"SELECT f_no, f_id, f_pw, f_name, f_email, dno FROM professor INTO OUTFILE '{csv_path}professor_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        cur.execute(save_csv_professor)
+
+        save_csv_project = f"SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno, f_no FROM project WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_project)
 
         save_csv_project_user = f"SELECT p_no, s_no, permission, role, grade, comment FROM project_user WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_user_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
@@ -55,6 +58,8 @@ def export_csv(pid):
 
         save_csv_doc_other = f"SELECT file_no, file_name, file_path, file_date, s_no, p_no FROM doc_other WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_o_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_other)
+
+        print(f"Info : DB에 저장된 프로젝트 관련 정보를 모두 CSV 파일로 정상적으로 내보냈습니다. 내보낸 시간 : [{save_time}]")
         return True
     except Exception as e:
         print(f"Error [export_csv] : {e}")
@@ -67,6 +72,7 @@ def export_csv(pid):
 # {산출물 종류(문자열) : CSV 파일 경로(문자열)} 형태의 딕셔너리를 매개 변수로 받아서 CSV 파일의 내용을 DB에 저장한다
 # csv_dict = {
 #     "student" : "/var/lib/mysql/csv/student_10001_250105-153058.csv",
+#     "professor" : "/var/lib/mysql/csv/professor_10001_250105-153058.csv",
 #     "project" : "/var/lib/mysql/csv/project_10001_250105-153058.csv",
 #     "project_user" : "/var/lib/mysql/csv/project_user_10001_250105-153058.csv",
 #     "permission" : "/var/lib/mysql/csv/permission_10001_250105-153058.csv",
@@ -101,9 +107,18 @@ def import_csv(file_paths, pid):
                 print(f"Error [import_csv :: student] : {e}")
                 import_fail.append("student")
 
+        if "professor" in file_paths:
+            try:
+                load_csv_professor = f"LOAD DATA INFILE '{file_paths['professor']}' IGNORE INTO TABLE professor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (f_no, f_id, f_pw, f_name, f_email, dno)"
+                cur.execute(load_csv_professor)
+                import_ok.append("professor")
+            except Exception as e:
+                print(f"Error [import_csv :: professor] : {e}")
+                import_fail.append("professor")
+
         if "project" in file_paths:
             try:
-                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno)"
+                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno, f_no)"
                 cur.execute(load_csv_project)
                 import_ok.append("project")
             except Exception as e:

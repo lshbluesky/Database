@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/01/23
+    마지막 수정 날짜 : 2025/01/26
 """
 
 import pymysql
@@ -21,10 +21,10 @@ def init_project(payload, pid):
 
     try:
         add_project = """
-        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno, f_no)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10))
+        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.prof_id))
         connection.commit()
         return True
     except Exception as e:
@@ -55,10 +55,11 @@ def edit_project(payload):
             p_start = %s,
             p_end = %s,
             p_wizard = %s,
-            dno = %s
+            dno = %s,
+            f_no = %s            
         WHERE p_no = %s
         """
-        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.pid))
+        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.prof_id, payload.pid))
         connection.commit()
         return True
     except Exception as e:
@@ -87,6 +88,30 @@ def fetch_project_info(univ_id):
         return result
     except Exception as e:
         print(f"Error [fetch_project_info] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 정보 조회 함수 (교수 전용)
+# 교수의 교번을 매개 변수로 받아서 교수가 담당하고 있는 학생의 모든 프로젝트를 조회한다
+def fetch_project_info_for_professor(f_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        fetch_project_info_for_professor = """
+        SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard
+        FROM project
+        WHERE p_no IN (SELECT p_no
+            FROM project
+            WHERE f_no = %s);
+        """
+        cur.execute(fetch_project_info_for_professor, (f_no,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_project_info_for_professor] : {e}")
         return e
     finally:
         cur.close()

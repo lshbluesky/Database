@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2024/11/29
+    마지막 수정 날짜 : 2025/01/27
 """
 
 import pymysql
@@ -123,6 +123,111 @@ def validate_user_token(id, Token):
             return False
     except Exception as e:
         print(f"Error [validate_user_token] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# ------------------------------ 교수 계정 ------------------------------ #
+# 교수 로그인 정보 확인 함수
+def validate_professor(id, pw):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT f_id, f_pw FROM professor WHERE f_id = %s", (id,))
+        row = cur.fetchone()
+        if row and id == row['f_id'] and pw == row['f_pw']:
+            return row['f_no']
+        else:
+            return None
+    except Exception as e:
+        print(f"Error [validate_professor] : {e}")
+        raise e
+    finally:
+        cur.close()
+        connection.close()
+
+# 교수 로그인 성공 후 토큰(세션)을 DB에 저장하는 함수
+# 교수가 로그인에 성공하면, 교수의 ID와 생성된 토큰을 매개 변수로 받아서 해당 관리자의 현재 세션을 유지하기 위한 토큰을 저장한다
+def save_signin_professor_token(id, Token):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE professor SET f_token = %s WHERE f_id = %s", (Token, id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [save_signin_professor_token] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 교수 로그아웃 함수
+def signout_professor(Token):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE professor SET f_token = NULL WHERE f_token = %s", (Token,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [signout_professor] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 교수 토큰 확인 함수
+def validate_professor_token(id, Token):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT f_token FROM professor WHERE f_id = %s", (id,))
+        stored_token = cur.fetchone()
+
+        if Token == stored_token['f_token']:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"Error [validate_professor_token] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 현재 사용자 계정이 학생 또는 교수인지 판단하는 함수
+# 토큰을 매개 변수로 받으며, 학생이면 1을 반환하고, 교수이면 2를 반환한다
+def check_user_type(Token):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM student WHERE s_token = %s", (Token,))
+        student = cur.fetchone()
+
+        cur.execute("SELECT COUNT(*) AS cnt FROM professor WHERE f_token = %s", (Token,))
+        professor = cur.fetchone()
+
+        if student['cnt'] == 1 and professor['cnt'] == 0:
+            return 1
+        elif student['cnt'] == 0 and professor['cnt'] == 1:
+            return 2
+        elif student['cnt'] == 0 and professor['cnt'] == 0:
+            print(f"Warning [check_user_type] : Token [{Token}] value is not exist in DB. (Student Count : {student['cnt']}, Professor Count : {professor['cnt']})")
+            return 0
+        else:
+            print(f"Warning [check_user_type] : Token [{Token}] value is unknown user type. (Student Count : {student['cnt']}, Professor Count : {professor['cnt']})")
+            return 0
+    except Exception as e:
+        print(f"Error [check_user_type] : {e}")
         return e
     finally:
         cur.close()
