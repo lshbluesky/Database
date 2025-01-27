@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2025/01/25
+    마지막 수정 날짜 : 2025/01/27
 """
 
 import pymysql
@@ -198,6 +198,36 @@ def validate_professor_token(id, Token):
             return False
     except Exception as e:
         print(f"Error [validate_professor_token] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 현재 사용자 계정이 학생 또는 교수인지 판단하는 함수
+# 토큰을 매개 변수로 받으며, 학생이면 1을 반환하고, 교수이면 2를 반환한다
+def check_user_type(Token):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM student WHERE s_token = %s", (Token,))
+        student = cur.fetchone()
+
+        cur.execute("SELECT COUNT(*) AS cnt FROM professor WHERE f_token = %s", (Token,))
+        professor = cur.fetchone()
+
+        if student['cnt'] == 1 and professor['cnt'] == 0:
+            return 1
+        elif student['cnt'] == 0 and professor['cnt'] == 1:
+            return 2
+        elif student['cnt'] == 0 and professor['cnt'] == 0:
+            print(f"Warning [check_user_type] : Token [{Token}] value is not exist in DB. (Student Count : {student['cnt']}, Professor Count : {professor['cnt']})")
+            return 0
+        else:
+            print(f"Warning [check_user_type] : Token [{Token}] value is unknown user type. (Student Count : {student['cnt']}, Professor Count : {professor['cnt']})")
+            return 0
+    except Exception as e:
+        print(f"Error [check_user_type] : {e}")
         return e
     finally:
         cur.close()
