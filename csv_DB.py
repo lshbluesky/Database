@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/01/26
+    마지막 수정 날짜 : 2025/01/31
 """
 
 import pymysql
@@ -227,6 +227,22 @@ def import_csv(file_paths, pid):
             return False
     except Exception as e:
         print(f"Error [import_csv] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 Import/Export 기능에서 현재 프로젝트의 모든 버전 정보를 조회하는 함수
+def fetch_csv_history(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM history WHERE p_no = %s ORDER BY ver DESC", pid)
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_csv_history] : {e}")
         return e
     finally:
         cur.close()
