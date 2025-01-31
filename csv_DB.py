@@ -246,7 +246,7 @@ def fetch_csv_history(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT * FROM history WHERE p_no = %s ORDER BY ver DESC", pid)
+        cur.execute("SELECT * FROM history WHERE p_no = %s ORDER BY ver DESC", (pid,))
         result = cur.fetchall()
         return result
     except Exception as e:
