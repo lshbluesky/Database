@@ -10,9 +10,9 @@ from mysql_connection import db_connect
 import project_DB
 
 # 프로젝트 정보를 CSV 파일로 내보내는 함수
-# 프로젝트 번호를 매개 변수로 받아서 해당 프로젝트의 정보, 업무, 진척도, 각 산출물 정보를 CSV 파일로 내보낸다
+# 프로젝트 번호, 현재 사용자의 Token 값, 메시지를 매개 변수로 받아서 해당 프로젝트의 정보, 업무, 진척도, 각 산출물 정보를 CSV 파일로 내보낸다
 # 내보낸 CSV 파일은 /var/lib/mysql/csv/ 경로에 저장된다
-def export_csv(pid):
+def export_csv(pid, Token, msg):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -59,6 +59,10 @@ def export_csv(pid):
         save_csv_doc_other = f"SELECT file_no, file_name, file_path, file_date, s_no, p_no FROM doc_other WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_o_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_other)
 
+        save_history = f"INSERT INTO history (p_no, ver, date, s_no, msg) VALUES ({pid}, nextval({pid}), NOW(), (SELECT s_no FROM student WHERE s_token = '{Token}'), '{msg}')"
+        cur.execute(save_history)
+
+        connection.commit()
         print(f"Info : DB에 저장된 프로젝트 관련 정보를 모두 CSV 파일로 정상적으로 내보냈습니다. 내보낸 시간 : [{save_time}]")
         return True
     except Exception as e:
@@ -85,10 +89,12 @@ def export_csv(pid):
 #     "doc_report" : "/var/lib/mysql/csv/doc_rep_10001_250105-153058.csv",
 #     "doc_other" : "/var/lib/mysql/csv/doc_o_10001_250105-153058.csv"
 # }
-# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid) 와 같이 함수를 호출하여 사용한다
+# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid, Token, 'Revert z to x') 와 같이 함수를 호출하여 사용한다
 # 참고 : pid 매개 변수는 프로젝트를 Import 하기 전에 기존의 프로젝트 내용을 삭제하는 데에 사용된다
 # 참고 : 딕셔너리의 키는 수정이 불가능하며, CSV 파일은 /var/lib/mysql/csv 경로에 저장되어 있어야 한다
-def import_csv(file_paths, pid):
+# 참고 : Token 매개 변수는 프로젝트 Import 기능을 수행하려는 현재 사용자의 Token 값이다
+# 참고 : msg 매개 변수는 API 서버로부터 'Revert z to x' 형태의 문자열을 그대로 받는다
+def import_csv(file_paths, pid, Token, msg):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -96,6 +102,7 @@ def import_csv(file_paths, pid):
     import_fail = []
 
     try:
+        export_csv(pid, Token, msg)
         project_DB.delete_project(pid)
 
         if "student" in file_paths:
