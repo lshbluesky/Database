@@ -239,6 +239,24 @@ def import_csv(file_paths, pid, Token, msg):
         cur.close()
         connection.close()
 
+# 프로젝트 Import/Export 기능에서 현재 프로젝트의 모든 버전 정보를 삭제하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def delete_csv_history(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("DELETE FROM history WHERE p_no = %s", (pid,))
+        cur.execute("CALL create_sequence(%s)", (pid,))
+        connection.commit()
+        return True
+    except Exception as e:
+        print(f"Error [delete_csv_history] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트 Import/Export 기능에서 현재 프로젝트의 모든 버전 정보를 조회하는 함수
 # 프로젝트 번호를 매개 변수로 받는다
 def fetch_csv_history(pid):
