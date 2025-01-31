@@ -173,6 +173,15 @@ CREATE TABLE permission (
  PRIMARY KEY (p_no, s_no)
 );
 
+CREATE TABLE history (
+ p_no INT NOT NULL,
+ ver INT UNSIGNED NOT NULL,
+ date DATETIME NOT NULL,
+ s_no INT NOT NULL,
+ msg TEXT NULL,
+ PRIMARY KEY (p_no, ver)
+);
+
 CREATE TABLE sequences (
  p_no BIGINT UNSIGNED PRIMARY KEY,
  currval BIGINT UNSIGNED
