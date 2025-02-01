@@ -67,7 +67,7 @@ def create_pms_db_byFile():
         with conn.cursor() as cur:
             with open('PMS_Tables_Define.sql', 'r', encoding='utf-8') as f:
                 sql_file = f.read()
-        
+
             sql_commands = sql_file.split(';')
 
             for command in sql_commands:
@@ -78,7 +78,7 @@ def create_pms_db_byFile():
 
             with open('PMS_PLSQL_Define.sql', 'r', encoding='utf-8') as f:
                 plsql_file = f.read()
-            
+
             plsql_commands = plsql_file.split('$$')
 
             for command in plsql_commands:
@@ -86,8 +86,7 @@ def create_pms_db_byFile():
 
                 if command:
                     cur.execute(command)
-            
-            conn.commit()
 
+            conn.commit()
     finally:
         conn.close()
