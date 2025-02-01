@@ -88,5 +88,10 @@ def create_pms_db_byFile():
                     cur.execute(command)
 
             conn.commit()
+    except Exception as e:
+        print(f"Error [create_pms_db_byFile] : {e}")
+        cur.execute('DROP DATABASE PMS')
+        conn.commit()
+        return e
     finally:
         conn.close()
