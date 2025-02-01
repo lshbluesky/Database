@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : PMS_DB_Manage.py
-    마지막 수정 날짜 : 2024/11/10
+    마지막 수정 날짜 : 2025/02/01
 """
 
 import pymysql
@@ -75,7 +75,18 @@ def create_pms_db_byFile():
 
                 if command:
                     cur.execute(command)
-		
+
+            with open('PMS_PLSQL_Define.sql', 'r', encoding='utf-8') as f:
+                plsql_file = f.read()
+            
+            plsql_commands = plsql_file.split('$$')
+
+            for command in plsql_commands:
+                command = command.strip()
+
+                if command:
+                    cur.execute(command)
+            
             conn.commit()
 
     finally:
