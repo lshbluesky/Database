@@ -173,6 +173,20 @@ CREATE TABLE permission (
  PRIMARY KEY (p_no, s_no)
 );
 
+CREATE TABLE history (
+ p_no INT NOT NULL,
+ ver INT UNSIGNED NOT NULL,
+ date DATETIME NOT NULL,
+ s_no INT NOT NULL,
+ msg TEXT NULL,
+ PRIMARY KEY (p_no, ver)
+);
+
+CREATE TABLE sequences (
+ p_no BIGINT UNSIGNED PRIMARY KEY,
+ currval BIGINT UNSIGNED
+) ENGINE = InnoDB;
+
 ALTER TABLE student ADD CONSTRAINT FK_dept_TO_student_1 FOREIGN KEY (dno) REFERENCES dept (dno);
 ALTER TABLE professor ADD CONSTRAINT FK_dept_TO_professor_1 FOREIGN KEY (dno) REFERENCES dept (dno);
 ALTER TABLE project_user ADD CONSTRAINT FK_project_TO_project_user_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;

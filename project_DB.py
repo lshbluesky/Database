@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/01/26
+    마지막 수정 날짜 : 2025/01/31
 """
 
 import pymysql
@@ -25,6 +25,7 @@ def init_project(payload, pid):
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.prof_id))
+        cur.execute("CALL create_sequence(%s)", (pid,))
         connection.commit()
         return True
     except Exception as e:

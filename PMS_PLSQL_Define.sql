@@ -1,0 +1,18 @@
+CREATE PROCEDURE create_sequence (IN pid BIGINT UNSIGNED)
+MODIFIES SQL DATA
+DETERMINISTIC
+BEGIN
+    DELETE FROM sequences WHERE p_no = pid;
+    INSERT INTO sequences VALUES (pid, 0);
+END $$
+
+CREATE FUNCTION nextval (pid BIGINT UNSIGNED)
+RETURNS BIGINT UNSIGNED
+MODIFIES SQL DATA
+DETERMINISTIC
+BEGIN
+    DECLARE seqnum BIGINT UNSIGNED;
+    UPDATE sequences SET currval = currval + 1 WHERE p_no = pid;
+    SELECT currval INTO seqnum FROM sequences WHERE p_no = pid LIMIT 1;
+    RETURN seqnum;
+END $$
