@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2025/01/27
+    마지막 수정 날짜 : 2025/02/02
 """
 
 import pymysql
@@ -228,6 +228,27 @@ def check_user_type(Token):
             return 0
     except Exception as e:
         print(f"Error [check_user_type] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# ------------------------------ 계정 찾기 ------------------------------ #
+# 사용자(학생)의 비밀번호(PW)를 찾는 함수
+# 학번, 이름, 이메일, 아이디를 매개 변수로 받는다
+def find_user_pw(univ_id, name, email, id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT s_pw FROM student WHERE s_no = %s AND s_name = %s AND s_email = %s AND s_id = %s", (univ_id, name, email, id))
+        result = cur.fetchone()
+        if result:
+            return result['s_pw']
+        else:
+            return False
+    except Exception as e:
+        print(f"Error [find_user_pw] : {e}")
         return e
     finally:
         cur.close()
