@@ -233,8 +233,8 @@ def check_user_type(Token):
         cur.close()
         connection.close()
 
-# ------------------------------ 계정 찾기 ------------------------------ #
-# 사용자(학생)의 비밀번호(PW)를 찾는 함수
+# ------------------------------ 계정 찾기, 비밀번호 변경 ------------------------------ #
+# 사용자(학생)의 비밀번호(PW)를 찾기 위해 정보를 확인하는 함수
 # 학번, 이름, 이메일, 아이디를 매개 변수로 받는다
 def find_user_pw(univ_id, name, email, id):
     connection = db_connect()
@@ -248,7 +248,7 @@ def find_user_pw(univ_id, name, email, id):
         cur.execute("SELECT s_pw FROM student WHERE s_no = %s AND s_name = %s AND s_email = %s AND s_id = %s", (univ_id, name, email, id))
         result = cur.fetchone()
         if result:
-            return result['s_pw']
+            return True
         else:
             return False
     except Exception as e:
