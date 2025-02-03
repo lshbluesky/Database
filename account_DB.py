@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2025/02/02
+    마지막 수정 날짜 : 2025/02/03
 """
 
 import pymysql
@@ -241,6 +241,10 @@ def find_user_pw(univ_id, name, email, id):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        name = name.strip()
+        email = email.strip()
+        id = id.strip()
+
         cur.execute("SELECT s_pw FROM student WHERE s_no = %s AND s_name = %s AND s_email = %s AND s_id = %s", (univ_id, name, email, id))
         result = cur.fetchone()
         if result:
