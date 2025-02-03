@@ -257,3 +257,21 @@ def find_user_pw(univ_id, name, email, id):
     finally:
         cur.close()
         connection.close()
+
+# 사용자(학생)의 비밀번호(PW)를 변경하는 함수
+# 학번과 새로 변경할 비밀번호를 매개 변수로 받는다
+def edit_user_pw(univ_id, pw):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE student SET s_pw = %s WHERE s_no = %s", (pw, univ_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [edit_user_pw] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
