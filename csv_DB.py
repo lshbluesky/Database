@@ -238,6 +238,40 @@ def import_csv(file_paths, pid, univ_id, msg):
         cur.close()
         connection.close()
 
+# 프로젝트 Import/Export 기능에서 history 테이블에 정보를 기록하는 함수
+# 프로젝트 번호와 학번, 메시지를 매개 변수로 받는다
+def insert_csv_history(pid, univ_id, msg):
+    connection = db_connect()
+    cur = connection.cursor()
+
+    try:
+        cur.execute("SELECT COUNT(*) FROM sequences WHERE p_no = %s", (pid,))
+        exists = cur.fetchone()[0]
+        if exists == 0:
+            cur.execute("CALL create_sequence(%s)", (pid,))
+            connection.commit()
+            cur.execute("SELECT COUNT(*) FROM sequences WHERE p_no = %s", (pid,))
+            exists = cur.fetchone()[0]
+            if exists == 0:
+                raise Exception("Failed to initialize sequence for pid")
+        cur.execute("SELECT nextval(%s)", (pid,))
+        ver = cur.fetchone()[0]
+        if ver is None:
+            raise Exception("Failed to retrieve valid version number")
+        insert_query = """
+        INSERT INTO history (p_no, ver, date, s_no, msg)
+        VALUES (%s, %s, NOW(), %s, %s)
+        """
+        cur.execute(insert_query, (pid, ver, univ_id, msg))
+        connection.commit()
+        return ver
+    except Exception as e:
+        print(f"Failed to insert history record: {str(e)}")
+        return None
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트 Import/Export 기능에서 현재 프로젝트의 모든 버전 정보를 삭제하는 함수
 # 프로젝트 번호를 매개 변수로 받는다
 def delete_csv_history(pid):
