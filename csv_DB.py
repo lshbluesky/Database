@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/02/01
+    마지막 수정 날짜 : 2025/02/04
 """
 
 import pymysql
@@ -253,7 +253,8 @@ def insert_csv_history(pid, univ_id, msg):
             cur.execute("SELECT COUNT(*) FROM sequences WHERE p_no = %s", (pid,))
             exists = cur.fetchone()[0]
             if exists == 0:
-                raise Exception("Failed to initialize sequence for pid")
+                print(f"Failed to initialize sequence")
+                return None
         cur.execute("SELECT nextval(%s)", (pid,))
         ver = cur.fetchone()[0]
         if ver is None:
