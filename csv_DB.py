@@ -86,11 +86,11 @@ def export_csv(pid):
 #     "doc_report" : "/var/lib/mysql/csv/doc_rep_10001_250105-153058.csv",
 #     "doc_other" : "/var/lib/mysql/csv/doc_o_10001_250105-153058.csv"
 # }
-# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid, univ_id, 'Revert z to x') 와 같이 함수를 호출하여 사용한다
+# 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid) 와 같이 함수를 호출하여 사용한다
 # 참고 : pid 매개 변수는 프로젝트를 Import 하기 전에 기존의 프로젝트 내용을 삭제하는 데에 사용된다
 # 참고 : 딕셔너리의 키는 수정이 불가능하며, CSV 파일은 /var/lib/mysql/csv 경로에 저장되어 있어야 한다
 # 참고 : msg 매개 변수는 API 서버로부터 'Revert z to x' 형태의 문자열을 그대로 받는다
-def import_csv(file_paths, pid, univ_id, msg):
+def import_csv(file_paths, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -98,7 +98,6 @@ def import_csv(file_paths, pid, univ_id, msg):
     import_fail = []
 
     try:
-        export_csv(pid, univ_id, msg)
         project_DB.delete_project(pid)
 
         if "student" in file_paths:
