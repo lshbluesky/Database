@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/02/04
+    마지막 수정 날짜 : 2025/02/05
 """
 
 import pymysql
@@ -10,9 +10,9 @@ from mysql_connection import db_connect
 import project_DB
 
 # 프로젝트 정보를 CSV 파일로 내보내는 함수
-# 프로젝트 번호, 현재 사용자의 학번, 메시지를 매개 변수로 받아서 해당 프로젝트의 정보, 업무, 진척도, 각 산출물 정보를 CSV 파일로 내보낸다
+# 프로젝트 번호를 매개 변수로 받아서 해당 프로젝트의 정보, 업무, 진척도, 각 산출물 정보를 CSV 파일로 내보낸다
 # 내보낸 CSV 파일은 /var/lib/mysql/csv/ 경로에 저장된다
-def export_csv(pid, univ_id, msg):
+def export_csv(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -58,9 +58,6 @@ def export_csv(pid, univ_id, msg):
 
         save_csv_doc_other = f"SELECT file_no, file_name, file_path, file_date, s_no, p_no FROM doc_other WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_o_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_other)
-
-        save_history = f"INSERT INTO history (p_no, ver, date, s_no, msg) VALUES ({pid}, nextval({pid}), NOW(), {univ_id}, '{msg}')"
-        cur.execute(save_history)
 
         connection.commit()
         print(f"Info : DB에 저장된 프로젝트 관련 정보를 모두 CSV 파일로 정상적으로 내보냈습니다. 내보낸 시간 : [{save_time}]")
