@@ -234,37 +234,20 @@ def import_csv(file_paths, pid):
         cur.close()
         connection.close()
 
-# 프로젝트 Import/Export 기능에서 history 테이블에 정보를 기록하는 함수
-# 프로젝트 번호와 학번, 메시지를 매개 변수로 받는다
+# 프로젝트 Import/Export 기능에서 현재 프로젝트의 버전 정보를 history 테이블에 저장하는 함수
+# 프로젝트 번호, 현재 사용자의 학번, 메시지를 매개 변수로 받는다
 def insert_csv_history(pid, univ_id, msg):
     connection = db_connect()
-    cur = connection.cursor()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT COUNT(*) FROM sequences WHERE p_no = %s", (pid,))
-        exists = cur.fetchone()[0]
-        if exists == 0:
-            cur.execute("CALL create_sequence(%s)", (pid,))
-            connection.commit()
-            cur.execute("SELECT COUNT(*) FROM sequences WHERE p_no = %s", (pid,))
-            exists = cur.fetchone()[0]
-            if exists == 0:
-                print(f"Failed to initialize sequence")
-                return None
-        cur.execute("SELECT nextval(%s)", (pid,))
-        ver = cur.fetchone()[0]
-        if ver is None:
-            raise Exception("Failed to retrieve valid version number")
-        insert_query = """
-        INSERT INTO history (p_no, ver, date, s_no, msg)
-        VALUES (%s, %s, NOW(), %s, %s)
-        """
-        cur.execute(insert_query, (pid, ver, univ_id, msg))
+        save_history = f"INSERT INTO history (p_no, ver, date, s_no, msg) VALUES ({pid}, nextval({pid}), NOW(), {univ_id}, '{msg}')"
+        cur.execute(save_history)
         connection.commit()
-        return ver
+        return True
     except Exception as e:
-        print(f"Failed to insert history record: {str(e)}")
-        return None
+        print(f"Error [insert_csv_history] : {e}")
+        return e
     finally:
         cur.close()
         connection.close()
