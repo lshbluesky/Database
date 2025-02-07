@@ -160,8 +160,8 @@ def add_project_user(pid, univ_id, permission, role):
 
     try:
         add_project_user = """
-        INSERT INTO project_user(p_no, s_no, permission, role, grade, comment)
-        VALUES (%s, %s, %s, %s, NULL, NULL)
+        INSERT INTO project_user(p_no, s_no, permission, role, comment)
+        VALUES (%s, %s, %s, %s, NULL)
         """
         cur.execute(add_project_user, (pid, univ_id, permission, role))
         connection.commit()
