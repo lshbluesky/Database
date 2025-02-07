@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/01/31
+    마지막 수정 날짜 : 2025/02/07
 """
 
 import pymysql
@@ -21,10 +21,10 @@ def init_project(payload, pid):
 
     try:
         add_project = """
-        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, dno, f_no)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_subject, p_wizard, dno, f_no)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.prof_id))
+        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.subject, payload.wizard, 10, payload.prof_id))
         cur.execute("CALL create_sequence(%s)", (pid,))
         connection.commit()
         return True
@@ -55,12 +55,13 @@ def edit_project(payload):
             p_memcount = %s,
             p_start = %s,
             p_end = %s,
+            p_subject = %s,
             p_wizard = %s,
             dno = %s,
             f_no = %s            
         WHERE p_no = %s
         """
-        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, 10, payload.prof_id, payload.pid))
+        cur.execute(edit_project, (payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.subject, payload.wizard, 10, payload.prof_id, payload.pid))
         connection.commit()
         return True
     except Exception as e:
@@ -79,7 +80,7 @@ def fetch_project_info(univ_id):
 
     try:
         fetch_project_info = """
-        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard
+        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_subject, p.p_wizard
         FROM project p, project_user u
         WHERE p.p_no = u.p_no
         AND u.s_no = %s
@@ -102,7 +103,7 @@ def fetch_project_info_for_professor(f_no):
 
     try:
         fetch_project_info_for_professor = """
-        SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard
+        SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_subject, p_wizard
         FROM project
         WHERE p_no IN (SELECT p_no
             FROM project
@@ -301,7 +302,7 @@ def fetch_project_for_LLM(pid):
     cur = connection.cursor()
 
     try:
-        cur.execute("SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end FROM project WHERE p_no = %s", (pid,))
+        cur.execute("SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_subject FROM project WHERE p_no = %s", (pid,))
         project = cur.fetchone()
 
         cur.execute("SELECT w_name, w_person, w_start, w_end, w_checked FROM work WHERE p_no = %s", (pid,))
