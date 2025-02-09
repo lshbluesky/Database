@@ -334,7 +334,7 @@ def add_mm_file(pid, doc_m_no, file_name, file_path):
 
 # 특정 회의록의 첨부파일을 모두 삭제하는 함수
 # 프로젝트 번호와 회의록 번호를 매개 변수로 받는다
-def delete_mm_file(pid, doc_m_no):
+def delete_all_mm_file(pid, doc_m_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -343,7 +343,7 @@ def delete_mm_file(pid, doc_m_no):
         result = cur.fetchone()
 
         if result['cnt'] == 0:
-            print(f"Error [delete_mm_file] : MM file does not exist in Project UID {pid} and MM document number {doc_m_no}.")
+            print(f"Error [delete_all_mm_file] : MM file does not exist in Project UID {pid} and MM document number {doc_m_no}.")
             return False
         
         cur.execute("DELETE FROM doc_m_file WHERE p_no = %s AND doc_m_no = %s", (pid, doc_m_no))
@@ -351,7 +351,7 @@ def delete_mm_file(pid, doc_m_no):
         return True
     except Exception as e:
         connection.rollback()
-        print(f"Error [delete_mm_file] : {e}")
+        print(f"Error [delete_all_mm_file] : {e}")
         return e
     finally:
         cur.close()
