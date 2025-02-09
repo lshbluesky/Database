@@ -1,15 +1,16 @@
 """
     CodeCraft PMS Project
     파일명 : grade_DB.py
-    마지막 수정 날짜 : 2025/02/07
+    마지막 수정 날짜 : 2025/02/09
 """
 
 import pymysql
 from mysql_connection import db_connect
 
+# ------------------------------ 학생별 평가 코멘트 관련 함수 ------------------------------ #
 # 교수가 특정 프로젝트의 특정 학생에게 평가 코멘트를 작성하거나 수정하는 함수
 # 프로젝트 번호, 학번, 평가 코멘트를 매개 변수로 받는다
-def assign_grade(pid, univ_id, comment):
+def add_comment(pid, univ_id, comment):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -19,7 +20,7 @@ def assign_grade(pid, univ_id, comment):
         return True
     except Exception as e:
         connection.rollback()
-        print(f"Error [assign_grade] : {e}")
+        print(f"Error [add_comment] : {e}")
         return e
     finally:
         cur.close()
@@ -27,7 +28,7 @@ def assign_grade(pid, univ_id, comment):
 
 # 교수가 특정 프로젝트의 특정 학생에게 작성하였던 평가 코멘트를 삭제하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
-def delete_grade(pid, univ_id):
+def delete_comment(pid, univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -37,7 +38,7 @@ def delete_grade(pid, univ_id):
         return True
     except Exception as e:
         connection.rollback()
-        print(f"Error [delete_grade] : {e}")
+        print(f"Error [delete_comment] : {e}")
         return e
     finally:
         cur.close()
@@ -45,7 +46,7 @@ def delete_grade(pid, univ_id):
 
 # 특정 프로젝트에서 특정 학생의 평가 코멘트를 조회하여 반환하는 함수
 # 프로젝트 번호와 학번을 매개 변수로 받는다
-def fetch_one_grade(pid, univ_id):
+def fetch_one_comment(pid, univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -54,7 +55,7 @@ def fetch_one_grade(pid, univ_id):
         result = cur.fetchone()
         return result
     except Exception as e:
-        print(f"Error [fetch_one_grade] : {e}")
+        print(f"Error [fetch_one_comment] : {e}")
         return e
     finally:
         cur.close()
@@ -62,7 +63,7 @@ def fetch_one_grade(pid, univ_id):
 
 # 어떤 학생이 참여하고 있는 모든 프로젝트의 평가 코멘트를 조회하는 함수
 # 학번을 매개 변수로 받는다
-def fetch_grade_by_student(univ_id):
+def fetch_comment_by_student(univ_id):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -76,7 +77,7 @@ def fetch_grade_by_student(univ_id):
         result = cur.fetchall()
         return result
     except Exception as e:
-        print(f"Error [fetch_grade_by_student] : {e}")
+        print(f"Error [fetch_comment_by_student] : {e}")
         return e
     finally:
         cur.close()
@@ -84,7 +85,7 @@ def fetch_grade_by_student(univ_id):
 
 # 특정 프로젝트에 속한 모든 팀원의 평가 코멘트를 조회하는 함수
 # 프로젝트 번호를 매개 변수로 받는다
-def fetch_grade_by_project(pid):
+def fetch_comment_by_project(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -98,7 +99,7 @@ def fetch_grade_by_project(pid):
         result = cur.fetchall()
         return result
     except Exception as e:
-        print(f"Error [fetch_grade_by_project] : {e}")
+        print(f"Error [fetch_comment_by_project] : {e}")
         return e
     finally:
         cur.close()
