@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/02/05
+    마지막 수정 날짜 : 2025/02/09
 """
 
 import pymysql
@@ -89,7 +89,6 @@ def export_csv(pid):
 # 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid) 와 같이 함수를 호출하여 사용한다
 # 참고 : pid 매개 변수는 프로젝트를 Import 하기 전에 기존의 프로젝트 내용을 삭제하는 데에 사용된다
 # 참고 : 딕셔너리의 키는 수정이 불가능하며, CSV 파일은 /var/lib/mysql/csv 경로에 저장되어 있어야 한다
-# 참고 : msg 매개 변수는 API 서버로부터 'Revert z to x' 형태의 문자열을 그대로 받는다
 def import_csv(file_paths, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
@@ -236,6 +235,7 @@ def import_csv(file_paths, pid):
 
 # 프로젝트 Import/Export 기능에서 현재 프로젝트의 버전 정보를 history 테이블에 저장하는 함수
 # 프로젝트 번호, 현재 사용자의 학번, 메시지를 매개 변수로 받는다
+# 참고 : msg 매개 변수는 API 서버로부터 'Revert z to x' 형태의 문자열을 그대로 받는다
 def insert_csv_history(pid, univ_id, msg):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
