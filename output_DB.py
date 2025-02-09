@@ -310,7 +310,7 @@ def fetch_one_meeting_minutes(doc_m_no):
         connection.close()
 
 # ------------------------------ 회의록 첨부파일 ------------------------------ #
-# 회의록 첨부파일을 추가하는 함수
+# 특정 회의록에 첨부파일을 추가하는 함수
 # 프로젝트 번호, 회의록 번호, 파일 이름, 파일 경로를 매개 변수로 받는다
 def add_mm_file(pid, doc_m_no, file_name, file_path):
     connection = db_connect()
@@ -332,7 +332,7 @@ def add_mm_file(pid, doc_m_no, file_name, file_path):
         cur.close()
         connection.close()
 
-# 회의록 첨부파일을 삭제하는 함수
+# 특정 회의록의 첨부파일을 모두 삭제하는 함수
 # 프로젝트 번호와 회의록 번호를 매개 변수로 받는다
 def delete_mm_file(pid, doc_m_no):
     connection = db_connect()
@@ -357,7 +357,7 @@ def delete_mm_file(pid, doc_m_no):
         cur.close()
         connection.close()
 
-# 회의록 첨부파일을 조회하는 함수
+# 특정 회의록의 첨부파일을 조회하는 함수
 # 프로젝트 번호와 회의록 번호를 매개 변수로 받는다
 def fetch_mm_file(pid, doc_m_no):
     connection = db_connect()
