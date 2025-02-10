@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/02/07
+    마지막 수정 날짜 : 2025/02/10
 """
 
 import pymysql
@@ -235,6 +235,23 @@ def fetch_project_user(pid):
         return result
     except Exception as e:
         print(f"Error [fetch_project_user] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트별로 실제 참여하고 있는 팀원 수를 조회하는 함수
+# 매개 변수는 없으며, 프로젝트 참여 테이블에 저장된 모든 프로젝트별로 GROUP BY 및 COUNT 함수를 사용하여 팀원 수를 조회한다
+def fetch_project_user_count():
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT p_no, COUNT(*) AS count FROM project_user GROUP BY p_no ORDER BY p_no")
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_project_user_count] : {e}")
         return e
     finally:
         cur.close()
