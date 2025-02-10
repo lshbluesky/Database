@@ -128,6 +128,23 @@ def validate_user_token(id, Token):
         cur.close()
         connection.close()
 
+# 학번으로 학생의 이름을 조회하는 함수
+# 학번을 매개 변수로 받는다
+def fetch_student_name(univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT s_name FROM student WHERE s_no = %s", (univ_id,))
+        result = cur.fetchone()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_student_name] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # ------------------------------ 교수 계정 ------------------------------ #
 # 교수 로그인 정보 확인 함수
 def validate_professor(id, pw):
