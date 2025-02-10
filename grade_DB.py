@@ -167,6 +167,13 @@ def delete_grade(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM grade WHERE p_no = %s", (pid,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_grade] : Grade score of Project UID {pid} does not exist.")
+            return False
+
         cur.execute("DELETE FROM grade WHERE p_no = %s", (pid,))
         connection.commit()
         return True
