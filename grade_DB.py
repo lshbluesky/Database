@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : grade_DB.py
-    마지막 수정 날짜 : 2025/02/09
+    마지막 수정 날짜 : 2025/02/10
 """
 
 import pymysql
@@ -147,7 +147,7 @@ def edit_grade(pid, plan, require, design, progress, scm, cooperation, quality, 
             g_tech = %s,
             g_presentation = %s,
             g_completion = %s
-        WHERE p_no = %s"
+        WHERE p_no = %s
         """
         cur.execute(edit_grade, (plan, require, design, progress, scm, cooperation, quality, tech, presentation, completion, pid))
         connection.commit()
