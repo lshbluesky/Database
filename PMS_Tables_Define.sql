@@ -103,6 +103,12 @@ CREATE TABLE dept (
  dname VARCHAR(20) NOT NULL
 );
 
+CREATE TABLE subject (
+ subj_no INT NOT NULL PRIMARY KEY,
+ subj_name VARCHAR(50) NOT NULL,
+ dno INT NOT NULL
+);
+
 CREATE TABLE doc_require (
  doc_r_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
  doc_r_f_name TEXT NULL,
@@ -212,6 +218,7 @@ CREATE TABLE sequences (
 
 ALTER TABLE student ADD CONSTRAINT FK_dept_TO_student_1 FOREIGN KEY (dno) REFERENCES dept (dno);
 ALTER TABLE professor ADD CONSTRAINT FK_dept_TO_professor_1 FOREIGN KEY (dno) REFERENCES dept (dno);
+ALTER TABLE subject ADD CONSTRAINT FK_dept_TO_subject_1 FOREIGN KEY (dno) REFERENCES dept (dno);
 ALTER TABLE project_user ADD CONSTRAINT FK_project_TO_project_user_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE project_user ADD CONSTRAINT FK_student_TO_project_user_1 FOREIGN KEY (s_no) REFERENCES student (s_no) ON DELETE CASCADE;
 ALTER TABLE doc_other ADD CONSTRAINT FK_student_TO_doc_other_1 FOREIGN KEY (s_no) REFERENCES student (s_no);
@@ -219,6 +226,7 @@ ALTER TABLE doc_other ADD CONSTRAINT FK_project_TO_doc_other_1 FOREIGN KEY (p_no
 ALTER TABLE progress ADD CONSTRAINT FK_project_TO_progress_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE project ADD CONSTRAINT FK_dept_TO_project_1 FOREIGN KEY (dno) REFERENCES dept (dno);
 ALTER TABLE project ADD CONSTRAINT FK_professor_TO_project_1 FOREIGN KEY (f_no) REFERENCES professor (f_no) ON DELETE SET NULL;
+ALTER TABLE project ADD CONSTRAINT FK_subject_TO_project_1 FOREIGN KEY (subj_no) REFERENCES subject (subj_no) ON DELETE SET NULL;
 ALTER TABLE grade ADD CONSTRAINT FK_project_TO_grade_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE work ADD CONSTRAINT FK_project_user_TO_work FOREIGN KEY (p_no, s_no) REFERENCES project_user (p_no, s_no) ON DELETE CASCADE;
 ALTER TABLE doc_require ADD CONSTRAINT FK_project_TO_doc_require_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
