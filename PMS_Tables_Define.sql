@@ -129,14 +129,6 @@ CREATE TABLE doc_meeting (
  p_no INT NOT NULL
 );
 
-CREATE TABLE doc_m_file (
- doc_m_f_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
- doc_m_f_name VARCHAR(300) NOT NULL,
- doc_m_f_path VARCHAR(1000) NOT NULL,
- p_no INT NOT NULL,
- doc_m_no INT NOT NULL
-);
-
 CREATE TABLE doc_summary (
  doc_s_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
  doc_s_name VARCHAR(300) NULL,
@@ -175,6 +167,15 @@ CREATE TABLE doc_report (
  doc_rep_result TEXT NULL,
  doc_rep_conclusion TEXT NULL,
  p_no INT NOT NULL
+);
+
+CREATE TABLE doc_attach (
+ doc_a_no INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ doc_a_name VARCHAR(300) NOT NULL,
+ doc_a_path VARCHAR(1000) NOT NULL,
+ doc_type TINYINT NOT NULL,
+ doc_no INT NOT NULL
+ p_no INT NOT NULL,
 );
 
 CREATE TABLE permission (
@@ -222,11 +223,10 @@ ALTER TABLE grade ADD CONSTRAINT FK_project_TO_grade_1 FOREIGN KEY (p_no) REFERE
 ALTER TABLE work ADD CONSTRAINT FK_project_user_TO_work FOREIGN KEY (p_no, s_no) REFERENCES project_user (p_no, s_no) ON DELETE CASCADE;
 ALTER TABLE doc_require ADD CONSTRAINT FK_project_TO_doc_require_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE doc_meeting ADD CONSTRAINT FK_project_TO_doc_meeting_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
-ALTER TABLE doc_m_file ADD CONSTRAINT FK_project_TO_doc_m_file_1 FOREIGN KEY (p_no) REFERENCES project (p_no);
-ALTER TABLE doc_m_file ADD CONSTRAINT FK_doc_meeting_TO_doc_m_file_1 FOREIGN KEY (doc_m_no) REFERENCES doc_meeting (doc_m_no) ON DELETE CASCADE;
 ALTER TABLE doc_summary ADD CONSTRAINT FK_project_TO_doc_summary_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE doc_test ADD CONSTRAINT FK_project_TO_doc_test_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE doc_report ADD CONSTRAINT FK_project_TO_doc_report_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
+ALTER TABLE doc_attach ADD CONSTRAINT FK_project_TO_doc_attach_1 FOREIGN KEY (p_no) REFERENCES project (p_no) ON DELETE CASCADE;
 ALTER TABLE permission ADD CONSTRAINT FK_project_user_TO_permission FOREIGN KEY (p_no, s_no) REFERENCES project_user (p_no, s_no) ON DELETE CASCADE;
 
 INSERT INTO dept VALUES(10, '컴퓨터소프트웨어학과');
