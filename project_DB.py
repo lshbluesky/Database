@@ -119,6 +119,23 @@ def fetch_project_info_for_professor(f_no):
         cur.close()
         connection.close()
 
+# 프로젝트의 담당 교수 이름을 조회하는 함수
+# 프로젝트 번호를 매개 변수로 받는다
+def fetch_project_professor_name(pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT f_name FROM professor WHERE f_no = (SELECT f_no FROM project WHERE p_no = %s)", (pid,))
+        result = cur.fetchone()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_project_professor_name] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # 프로젝트 삭제 함수
 # 삭제하려는 프로젝트의 번호를 매개 변수로 받는다
 def delete_project(pid):
