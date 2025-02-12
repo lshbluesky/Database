@@ -69,6 +69,7 @@ CREATE TABLE project (
  p_end DATE NOT NULL,
  p_subject VARCHAR(20) NULL,
  p_wizard BOOLEAN NULL,
+ subj_no INT NULL,
  dno INT NOT NULL,
  f_no INT NULL
 );
