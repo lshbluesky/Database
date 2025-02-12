@@ -181,8 +181,8 @@ CREATE TABLE doc_attach (
  doc_a_name VARCHAR(300) NOT NULL,
  doc_a_path VARCHAR(1000) NOT NULL,
  doc_type TINYINT NOT NULL,
- doc_no INT NOT NULL
- p_no INT NOT NULL,
+ doc_no INT NOT NULL,
+ p_no INT NOT NULL
 );
 
 CREATE TABLE permission (
