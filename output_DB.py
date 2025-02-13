@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/01/18
+    마지막 수정 날짜 : 2025/02/13
 """
 
 import pymysql
@@ -647,6 +647,106 @@ def fetch_one_report(doc_rep_no):
         return result
     except Exception as e:
         print(f"Error [fetch_one_report] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+
+# CREATE TABLE doc_attach (
+#  doc_a_no INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+#  doc_a_name VARCHAR(300) NOT NULL,
+#  doc_a_path VARCHAR(1000) NOT NULL,
+#  doc_type TINYINT NOT NULL,
+#  doc_no INT NOT NULL,
+#  p_no INT NOT NULL
+# );
+
+# ------------------------------ 첨부파일 ------------------------------ #
+# 특정 프로젝트의 특정 산출물에 첨부파일을 추가하는 함수
+# 파일 이름, 파일 경로, 산출물 종류, 산출물 번호, 프로젝트 번호를 매개 변수로 받는다
+def add_attachment(doc_a_name, doc_a_path, doc_type, doc_no, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        add_doc_attach = """
+        INSERT INTO doc_attach(doc_a_name, doc_a_path, doc_type, doc_no, p_no)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        cur.execute(add_doc_attach, (doc_a_name, doc_a_path, doc_type, doc_no, pid))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [add_attachment] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()  
+
+# 특정 프로젝트의 특정 산출물에서 특정 첨부파일을 삭제하는 함수
+# 첨부파일 번호(doc_a_no)를 매개 변수로 받는다
+def delete_one_attachment(doc_a_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_attach WHERE doc_a_no = %s", (doc_a_no,))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_one_attachment] : Attachment file number {doc_a_no} does not exist.")
+            return False
+        
+        cur.execute("DELETE FROM doc_attach WHERE doc_a_no = %s", (doc_a_no,))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [delete_one_attachment] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 특정 프로젝트의 특정 산출물에 있는 첨부파일을 모두 삭제하는 함수
+# 산출물 종류, 산출물 번호, 프로젝트 번호를 매개 변수로 받는다
+def delete_all_attachments(doc_type, doc_no, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT COUNT(*) AS cnt FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        result = cur.fetchone()
+
+        if result['cnt'] == 0:
+            print(f"Error [delete_all_attachments] : Attachment file does not exist. (Project UID: {pid}, Document Type: {doc_type}, Document Number: {doc_no})")
+            return False
+        
+        cur.execute("DELETE FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [delete_all_attachments] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 특정 프로젝트의 특정 산출물에 있는 첨부파일을 조회하는 함수
+# 산출물 종류, 산출물 번호, 프로젝트 번호를 매개 변수로 받는다
+def fetch_all_attachments(doc_type, doc_no, pid):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_all_attachments] : {e}")
         return e
     finally:
         cur.close()
