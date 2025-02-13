@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : csv_DB.py
-    마지막 수정 날짜 : 2025/02/12
+    마지막 수정 날짜 : 2025/02/13
 """
 
 import pymysql
@@ -26,7 +26,7 @@ def export_csv(pid):
         save_csv_professor = f"SELECT f_no, f_id, f_pw, f_name, f_email, dno FROM professor INTO OUTFILE '{csv_path}professor_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_professor)
 
-        save_csv_project = f"SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_subject, p_wizard, dno, f_no FROM project WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        save_csv_project = f"SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, subj_no, dno, f_no FROM project WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_project)
 
         save_csv_project_user = f"SELECT p_no, s_no, permission, role, comment FROM project_user WHERE p_no = {pid} INTO OUTFILE '{csv_path}project_user_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
@@ -53,14 +53,14 @@ def export_csv(pid):
         save_csv_doc_m = f"SELECT doc_m_no, doc_m_title, doc_m_date, doc_m_loc, doc_m_member, doc_m_manager, doc_m_content, doc_m_result, p_no FROM doc_meeting WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_m_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_m)
 
-        save_csv_doc_m_file = f"SELECT doc_m_f_no, doc_m_f_name, doc_m_f_path, p_no, doc_m_no FROM doc_m_file WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_m_f_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
-        cur.execute(save_csv_doc_m_file)
-
         save_csv_doc_t = f"SELECT doc_t_no, doc_t_name, doc_t_start, doc_t_end, doc_t_pass, p_no FROM doc_test WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_t_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_t)
 
         save_csv_doc_rep = f"SELECT doc_rep_no, doc_rep_name, doc_rep_writer, doc_rep_date, doc_rep_pname, doc_rep_member, doc_rep_professor, doc_rep_research, doc_rep_design, doc_rep_arch, doc_rep_result, doc_rep_conclusion, p_no FROM doc_report WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_rep_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_rep)
+
+        save_csv_doc_a = f"SELECT doc_a_no, doc_a_name, doc_a_path, doc_type, doc_no, p_no FROM doc_attach WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_a_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
+        cur.execute(save_csv_doc_a)
 
         save_csv_doc_other = f"SELECT file_no, file_name, file_path, file_date, s_no, p_no FROM doc_other WHERE p_no = {pid} INTO OUTFILE '{csv_path}doc_o_{pid}_{save_time}.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n'"
         cur.execute(save_csv_doc_other)
@@ -89,9 +89,9 @@ def export_csv(pid):
 #     "doc_summary" : "/var/lib/mysql/csv/doc_s_10001_250105-153058.csv",
 #     "doc_require" : "/var/lib/mysql/csv/doc_r_10001_250105-153058.csv",
 #     "doc_meeting" : "/var/lib/mysql/csv/doc_m_10001_250105-153058.csv",
-#     "doc_m_file" : "/var/lib/mysql/csv/doc_m_f_10001_250105-153058.csv",
 #     "doc_test" : "/var/lib/mysql/csv/doc_t_10001_250105-153058.csv",
 #     "doc_report" : "/var/lib/mysql/csv/doc_rep_10001_250105-153058.csv",
+#     "doc_attach" : "/var/lib/mysql/csv/doc_a_10001_250105-153058.csv",
 #     "doc_other" : "/var/lib/mysql/csv/doc_o_10001_250105-153058.csv"
 # }
 # 위와 같이 딕셔너리를 만들고, import_csv(csv_dict, pid) 와 같이 함수를 호출하여 사용한다
@@ -127,7 +127,7 @@ def import_csv(file_paths, pid):
 
         if "project" in file_paths:
             try:
-                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_subject, p_wizard, dno, f_no)"
+                load_csv_project = f"LOAD DATA INFILE '{file_paths['project']}' INTO TABLE project FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, subj_no, dno, f_no)"
                 cur.execute(load_csv_project)
                 import_ok.append("project")
             except Exception as e:
@@ -206,15 +206,6 @@ def import_csv(file_paths, pid):
                 print(f"Error [import_csv :: doc_meeting] : {e}")
                 import_fail.append("doc_meeting")
 
-        if "doc_m_file" in file_paths:
-            try:
-                load_csv_doc_m_file = f"LOAD DATA INFILE '{file_paths['doc_m_file']}' INTO TABLE doc_m_file FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_m_f_no, doc_m_f_name, doc_m_f_path, p_no, doc_m_no)"
-                cur.execute(load_csv_doc_m_file)
-                import_ok.append("doc_m_file")
-            except Exception as e:
-                print(f"Error [import_csv :: doc_m_file] : {e}")
-                import_fail.append("doc_m_file")
-
         if "doc_test" in file_paths:
             try:
                 load_csv_doc_t = f"LOAD DATA INFILE '{file_paths['doc_test']}' INTO TABLE doc_test FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_t_no, doc_t_name, doc_t_start, doc_t_end, doc_t_pass, p_no)"
@@ -232,6 +223,15 @@ def import_csv(file_paths, pid):
             except Exception as e:
                 print(f"Error [import_csv :: doc_report] : {e}")
                 import_fail.append("doc_report")
+        
+        if "doc_attach" in file_paths:
+            try:
+                load_csv_doc_a = f"LOAD DATA INFILE '{file_paths['doc_attach']}' INTO TABLE doc_attach FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '^' LINES TERMINATED BY '\\n' (doc_a_no, doc_a_name, doc_a_path, doc_type, doc_no, p_no)"
+                cur.execute(load_csv_doc_a)
+                import_ok.append("doc_attach")
+            except Exception as e:
+                print(f"Error [import_csv :: doc_attach] : {e}")
+                import_fail.append("doc_attach")
 
         if "doc_other" in file_paths:
             try:
