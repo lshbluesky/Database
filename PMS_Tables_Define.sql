@@ -397,7 +397,7 @@ INSERT INTO subject VALUES
 (16095, '시뮬레이션및실습', 21),
 (16042, '프로젝트관리', 21);
 
-CREATE INDEX idx_subject_dno_subj_name ON subject(dno, subj_name);
+CREATE INDEX idx_subject_dno_subj_name ON subject (dno, subj_name);
 CREATE INDEX idx_progress_pno_group1to4 ON progress (p_no, group1no, group2no, group3no, group4no);
 CREATE INDEX idx_project_user_pno_sno ON project_user (p_no, s_no);
 
