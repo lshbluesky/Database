@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/02/13
+    마지막 수정 날짜 : 2025/02/18
 """
 
 import pymysql
@@ -200,7 +200,7 @@ def edit_project_user(univ_id, pid, role):
 
     try:
         # 프로젝트 참여 테이블에서 프로젝트 번호와 학번으로 수정할 팀원을 선택하고 역할을 수정
-        cur.execute("UPDATE project_user SET role = %s WHERE p_no = %s AND s_no = %s", (role, pid, univ_id))
+        cur.execute("UPDATE /*+ INDEX(project_user idx_project_user_pno_sno) */ project_user SET role = %s WHERE p_no = %s AND s_no = %s", (role, pid, univ_id))
         connection.commit()
         return True
     except Exception as e:
@@ -218,14 +218,14 @@ def delete_project_user(pid, univ_id):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT COUNT(*) AS cnt FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
+        cur.execute("SELECT /*+ INDEX(project_user idx_project_user_pno_sno) */ COUNT(*) AS cnt FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
         result = cur.fetchone()
 
         if result['cnt'] == 0:
             print(f"Error [delete_project_user] : Project user {univ_id} does not exist in Project UID {pid}.")
             return False
         
-        cur.execute("DELETE FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
+        cur.execute("DELETE /*+ INDEX(project_user idx_project_user_pno_sno) */ FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
         connection.commit()
         return True
     except Exception as e:
@@ -291,7 +291,7 @@ def validate_pm_permission(pid, univ_id):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT permission FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
+        cur.execute("SELECT /*+ INDEX(project_user idx_project_user_pno_sno) */ permission FROM project_user WHERE p_no = %s AND s_no = %s", (pid, univ_id))
         row = cur.fetchone()
 
         if row['permission'] == 1:
