@@ -701,7 +701,7 @@ def fetch_all_attachments(doc_type, doc_no, pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT * FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        cur.execute("SELECT /*+ INDEX(doc_attach idx_doc_attach_doctype_docno_pno) */ * FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
         result = cur.fetchall()
         return result
     except Exception as e:
