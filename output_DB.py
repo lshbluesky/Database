@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/02/14
+    마지막 수정 날짜 : 2025/02/19
 """
 
 import pymysql
@@ -676,14 +676,14 @@ def delete_all_attachments(doc_type, doc_no, pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT COUNT(*) AS cnt FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        cur.execute("SELECT /*+ INDEX(doc_attach idx_doc_attach_doctype_docno_pno) */ COUNT(*) AS cnt FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
         result = cur.fetchone()
 
         if result['cnt'] == 0:
             print(f"Error [delete_all_attachments] : Attachment file does not exist. (Project UID: {pid}, Document Type: {doc_type}, Document Number: {doc_no})")
             return False
         
-        cur.execute("DELETE FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        cur.execute("DELETE /*+ INDEX(doc_attach idx_doc_attach_doctype_docno_pno) */ FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
         connection.commit()
         return True
     except Exception as e:
