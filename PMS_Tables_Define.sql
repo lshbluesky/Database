@@ -401,6 +401,7 @@ CREATE INDEX idx_subject_dno_subj_name ON subject (dno, subj_name);
 CREATE INDEX idx_progress_pno_group1to4 ON progress (p_no, group1no, group2no, group3no, group4no);
 CREATE INDEX idx_project_user_pno_sno ON project_user (p_no, s_no);
 CREATE INDEX idx_doc_attach_doctype_docno_pno ON doc_attach (doc_type, doc_no, p_no);
+CREATE INDEX idx_work_pno_sno_wno ON work (p_no, s_no, w_no DESC);
 
 SELECT * FROM dept;
 COMMIT;
