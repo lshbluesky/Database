@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : task_DB.py
-    마지막 수정 날짜 : 2024/12/15
+    마지막 수정 날짜 : 2025/02/21
 """
 
 import pymysql
@@ -62,7 +62,7 @@ def add_task_info(tname, tperson, tstart, tend, pid, univ_id):
         
         # ORDERY BY 절을 이용하여 업무 번호를 내림차순으로 조회하고,
         # 그 첫 번째 행만 가져온 후에 방금 추가한 업무의 업무 번호를 조회하여 반환
-        cur.execute("SELECT * FROM work WHERE p_no = %s AND s_no = %s ORDER BY w_no DESC", (pid, univ_id))
+        cur.execute("SELECT /*+ INDEX(work idx_work_pno_sno_wno) */ * FROM work WHERE p_no = %s AND s_no = %s ORDER BY w_no DESC", (pid, univ_id))
         row = cur.fetchone()
         return row['w_no']
     except Exception as e:
