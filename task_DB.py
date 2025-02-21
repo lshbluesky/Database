@@ -19,7 +19,6 @@ def fetch_task_info(pid, univ_id):
         load_work = "SELECT w_no, w_name, w_person, w_start, w_end, w_checked, s_no FROM work WHERE p_no = %s AND s_no = %s"
         cur.execute(load_work, (pid, univ_id))
         result = cur.fetchall()
-        # task.py 에서 딕셔너리 키를 DB의 컬럼 이름으로 접근하도록 수정 필요
         return result
     except Exception as e:
         print(f"Error [fetch_task_info] : {e}")
