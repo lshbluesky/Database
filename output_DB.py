@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/02/14
+    마지막 수정 날짜 : 2025/02/19
 """
 
 import pymysql
@@ -611,16 +611,6 @@ def fetch_one_report(doc_rep_no):
         cur.close()
         connection.close()
 
-
-# CREATE TABLE doc_attach (
-#  doc_a_no INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-#  doc_a_name VARCHAR(300) NOT NULL,
-#  doc_a_path VARCHAR(1000) NOT NULL,
-#  doc_type TINYINT NOT NULL,
-#  doc_no INT NOT NULL,
-#  p_no INT NOT NULL
-# );
-
 # ------------------------------ 첨부파일 ------------------------------ #
 # 특정 프로젝트의 특정 산출물에 첨부파일을 추가하는 함수
 # 파일 이름, 파일 경로, 산출물 종류, 산출물 번호, 프로젝트 번호를 매개 변수로 받는다
@@ -676,14 +666,14 @@ def delete_all_attachments(doc_type, doc_no, pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT COUNT(*) AS cnt FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        cur.execute("SELECT /*+ INDEX(doc_attach idx_doc_attach_doctype_docno_pno) */ COUNT(*) AS cnt FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
         result = cur.fetchone()
 
         if result['cnt'] == 0:
             print(f"Error [delete_all_attachments] : Attachment file does not exist. (Project UID: {pid}, Document Type: {doc_type}, Document Number: {doc_no})")
             return False
         
-        cur.execute("DELETE FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        cur.execute("DELETE /*+ INDEX(doc_attach idx_doc_attach_doctype_docno_pno) */ FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
         connection.commit()
         return True
     except Exception as e:
@@ -701,7 +691,7 @@ def fetch_all_attachments(doc_type, doc_no, pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT * FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
+        cur.execute("SELECT /*+ INDEX(doc_attach idx_doc_attach_doctype_docno_pno) */ * FROM doc_attach WHERE doc_type = %s AND doc_no = %s AND p_no = %s", (doc_type, doc_no, pid))
         result = cur.fetchall()
         return result
     except Exception as e:

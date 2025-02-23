@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : wbs_DB.py
-    마지막 수정 날짜 : 2025/01/18
+    마지막 수정 날짜 : 2025/02/17
 """
 
 import pymysql
@@ -36,7 +36,7 @@ def fetch_all_wbs(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT * FROM progress WHERE p_no = %s ORDER BY group1no, group2no, group3no, group4no", (pid,))
+        cur.execute("SELECT /*+ INDEX(progress idx_progress_pno_group1to4) */ * FROM progress WHERE p_no = %s ORDER BY group1no, group2no, group3no, group4no", (pid,))
         result = cur.fetchall()
         return result
     except Exception as e:

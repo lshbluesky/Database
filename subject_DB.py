@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : subject_DB.py
-    마지막 수정 날짜 : 2025/02/13
+    마지막 수정 날짜 : 2025/02/17
 """
 
 import pymysql
@@ -14,7 +14,7 @@ def fetch_subject_list():
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT subj_no, subj_name FROM subject ORDER BY dno, subj_name")
+        cur.execute("SELECT /*+ INDEX(subject idx_subject_dno_subj_name) */ subj_no, subj_name FROM subject ORDER BY dno, subj_name")
         result = cur.fetchall()
         return result
     except Exception as e:
