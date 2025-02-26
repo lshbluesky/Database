@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/02/18
+    마지막 수정 날짜 : 2025/02/26
 """
 
 import pymysql
@@ -22,9 +22,9 @@ def init_project(payload, pid):
     try:
         add_project = """
         INSERT INTO project(p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, subj_no, dno, f_no)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, (SELECT dno FROM subject WHERE subj_no = %s), %s)
         """
-        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, payload.subject, 10, payload.prof_id))
+        cur.execute(add_project, (pid, payload.pname, payload.pdetails, payload.pmm, payload.psize, p_startD, p_endD, payload.wizard, payload.subject, payload.subject, payload.prof_id))
         cur.execute("CALL create_sequence(%s)", (pid,))
         connection.commit()
         return True
