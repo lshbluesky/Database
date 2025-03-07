@@ -284,6 +284,23 @@ def fetch_professor_list(univ_id):
         cur.close()
         connection.close()
 
+# 프로젝트 생성 시 과목 코드로 해당 학과의 교수 목록을 조회하는 함수
+# 과목 코드를 매개 변수로 받는다
+def fetch_professor_list_by_subject(subj_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT f_no, f_name FROM professor WHERE dno = (SELECT dno FROM subject WHERE subj_no = %s)", (subj_no,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_professor_list_by_subject] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # ------------------------------ 계정 찾기, 비밀번호 변경 ------------------------------ #
 # 사용자(학생)의 비밀번호(PW)를 찾기 위해 정보를 확인하는 함수
 # 학번, 이름, 이메일, 아이디를 매개 변수로 받는다
