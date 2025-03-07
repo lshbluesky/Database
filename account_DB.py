@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2025/02/10
+    마지막 수정 날짜 : 2025/03/07
 """
 
 import pymysql
@@ -145,6 +145,23 @@ def fetch_student_name(univ_id):
         cur.close()
         connection.close()
 
+# 회원가입 시 전체 학과 정보를 조회하는 함수
+# 매개 변수는 없으며, 전체 학과 정보를 조회한다
+def fetch_dept_list():
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT dno, dname FROM dept ORDER BY dno")
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_dept_list] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
 # ------------------------------ 교수 계정 ------------------------------ #
 # 교수 로그인 정보 확인 함수
 def validate_professor(id, pw):
@@ -262,6 +279,23 @@ def fetch_professor_list(univ_id):
         return result
     except Exception as e:
         print(f"Error [fetch_professor_list] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 프로젝트 생성 시 과목 코드로 해당 학과의 교수 목록을 조회하는 함수
+# 과목 코드를 매개 변수로 받는다
+def fetch_professor_list_by_subject(subj_no):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT f_no, f_name FROM professor WHERE dno = (SELECT dno FROM subject WHERE subj_no = %s)", (subj_no,))
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_professor_list_by_subject] : {e}")
         return e
     finally:
         cur.close()
