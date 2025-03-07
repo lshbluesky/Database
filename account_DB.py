@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2025/02/10
+    마지막 수정 날짜 : 2025/03/07
 """
 
 import pymysql
@@ -140,6 +140,23 @@ def fetch_student_name(univ_id):
         return result
     except Exception as e:
         print(f"Error [fetch_student_name] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 회원가입 시 전체 학과 정보를 조회하는 함수
+# 매개 변수는 없으며, 전체 학과 정보를 조회한다
+def fetch_dept_list():
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT dno, dname FROM dept ORDER BY dno")
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_dept_list] : {e}")
         return e
     finally:
         cur.close()
