@@ -169,7 +169,7 @@ def validate_professor(id, pw):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT f_id, f_pw FROM professor WHERE f_id = %s", (id,))
+        cur.execute("SELECT f_no, f_id, f_pw FROM professor WHERE f_id = %s", (id,))
         row = cur.fetchone()
         if row and id == row['f_id'] and pw == row['f_pw']:
             return row['f_no']
