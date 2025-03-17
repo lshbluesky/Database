@@ -80,9 +80,9 @@ def fetch_project_info(univ_id):
 
     try:
         fetch_project_info = """
-        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard, s.subj_name
-        FROM project p, project_user u, subject s
-        WHERE p.p_no = u.p_no AND p.subj_no = s.subj_no
+        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard, f.f_no, f.f_name, s.subj_no, s.subj_name
+        FROM project p, project_user u, subject s, professor f
+        WHERE p.p_no = u.p_no AND p.subj_no = s.subj_no AND p.f_no = f.f_no
         AND u.s_no = %s
         """
         cur.execute(fetch_project_info, (univ_id,))
@@ -103,12 +103,12 @@ def fetch_project_info_for_professor(f_no):
 
     try:
         fetch_project_info_for_professor = """
-        SELECT p_no, p_name, p_content, p_method, p_memcount, p_start, p_end, p_wizard, s.subj_name
-        FROM project p, subject s
-        WHERE p.subj_no = s.subj_no
+        SELECT p.p_no, p.p_name, p.p_content, p.p_method, p.p_memcount, p.p_start, p.p_end, p.p_wizard, f.f_no, f.f_name, s.subj_no, s.subj_name
+        FROM project p, subject s, professor f
+        WHERE p.subj_no = s.subj_no AND p.f_no = f.f_no
         AND p_no IN (SELECT p_no
             FROM project
-            WHERE f_no = %s);
+            WHERE f_no = %s)
         """
         cur.execute(fetch_project_info_for_professor, (f_no,))
         result = cur.fetchall()
