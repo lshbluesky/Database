@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/02/19
+    마지막 수정 날짜 : 2025/03/18
 """
 
 import pymysql
@@ -11,16 +11,16 @@ from output import *
 # ------------------------------ 프로젝트 개요서 ------------------------------ #
 # 프로젝트 개요서 간단본을 추가하는 함수
 # 추가하려는 프로젝트 개요서 간단본의 내용과 프로젝트 번호를 매개 변수로 받는다
-def add_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcomes, pid):
+def add_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcomes, add_date, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_doc_summary = """
         INSERT INTO doc_summary(doc_s_name, doc_s_team, doc_s_overview, doc_s_start, doc_s_end, doc_s_range, doc_s_outcomes, doc_s_date, p_no)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_doc_summary, (pname, pteam, psummary, pstart, pend, prange, poutcomes, pid))
+        cur.execute(add_doc_summary, (pname, pteam, psummary, pstart, pend, prange, poutcomes, add_date, pid))
         connection.commit()
 
         cur.execute("SELECT * FROM doc_summary WHERE p_no = %s ORDER BY doc_s_no DESC", (pid,))
@@ -82,16 +82,16 @@ def fetch_all_summary_documents(pid):
 
 # 프로젝트 개요서 상세본을 추가하는 함수
 # 추가하려는 프로젝트 개요서 상세본의 내용과 프로젝트 번호를 매개 변수로 받는다
-def add_overview_document(pname, pteam, poverview, poutcomes, pgoals, pstart, pend, prange, pstack, pid):
+def add_overview_document(pname, pteam, poverview, poutcomes, pgoals, pstart, pend, prange, pstack, add_date, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_doc_overview = """
         INSERT INTO doc_summary(doc_s_name, doc_s_overview, doc_s_goals, doc_s_range, doc_s_outcomes, doc_s_team, doc_s_stack, doc_s_start, doc_s_end, doc_s_date, p_no)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_doc_overview, (pname, poverview, pgoals, prange, poutcomes, pteam, pstack, pstart, pend, pid))
+        cur.execute(add_doc_overview, (pname, poverview, pgoals, prange, poutcomes, pteam, pstack, pstart, pend, add_date, pid))
         connection.commit()
 
         cur.execute("SELECT * FROM doc_summary WHERE p_no = %s ORDER BY doc_s_no DESC", (pid,))
@@ -312,16 +312,16 @@ def fetch_one_meeting_minutes(doc_m_no):
 # ------------------------------ 요구사항 명세서 ------------------------------ #
 # 요구사항 명세서를 추가하는 함수
 # 추가하려는 요구사항 명세서의 내용과 프로젝트 번호를 매개 변수로 받는다
-def add_reqspec(feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, pid):
+def add_reqspec(feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, add_date, pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
         add_doc_require = """
         INSERT INTO doc_require(doc_r_f_name, doc_r_f_content, doc_r_f_priority, doc_r_nf_name, doc_r_nf_content, doc_r_nf_priority, doc_r_s_name, doc_r_s_content, doc_r_date, p_no)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW(), %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(add_doc_require, (feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, pid))
+        cur.execute(add_doc_require, (feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, add_date, pid))
         connection.commit()
 
         cur.execute("SELECT * FROM doc_require WHERE p_no = %s ORDER BY doc_r_no DESC", (pid,))
