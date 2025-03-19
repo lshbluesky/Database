@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/02/26
+    마지막 수정 날짜 : 2025/03/19
 """
 
 import pymysql
@@ -120,14 +120,14 @@ def fetch_project_info_for_professor(f_no):
         cur.close()
         connection.close()
 
-# 프로젝트의 담당 교수 이름을 조회하는 함수
+# 특정 프로젝트의 담당 교수의 교번, 교수 이름을 조회하는 함수
 # 프로젝트 번호를 매개 변수로 받는다
 def fetch_project_professor_name(pid):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT f_name FROM professor WHERE f_no = (SELECT f_no FROM project WHERE p_no = %s)", (pid,))
+        cur.execute("SELECT f_no, f_name FROM professor WHERE f_no = (SELECT f_no FROM project WHERE p_no = %s)", (pid,))
         result = cur.fetchone()
         return result
     except Exception as e:
