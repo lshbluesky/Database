@@ -324,7 +324,7 @@ def fetch_csv_history_by_univid(univ_id):
         result = cur.fetchall()
         return result
     except Exception as e:
-        print(f"Error [fetch_csv_history] : {e}")
+        print(f"Error [fetch_csv_history_by_univid] : {e}")
         return e
     finally:
         cur.close()
