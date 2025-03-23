@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/03/18
+    마지막 수정 날짜 : 2025/03/23
 """
 
 import pymysql
@@ -36,7 +36,7 @@ def add_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcomes
 
 # 프로젝트 개요서 간단본을 수정하는 함수
 # 수정하려는 프로젝트 개요서 간단본의 내용과 산출물 번호를 매개 변수로 받는다
-def edit_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcomes, doc_s_no):
+def edit_summary_document(pname, pteam, psummary, pstart, pend, add_date, prange, poutcomes, doc_s_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -48,11 +48,12 @@ def edit_summary_document(pname, pteam, psummary, pstart, pend, prange, poutcome
             doc_s_overview = %s,
             doc_s_start = %s,
             doc_s_end = %s,
+            doc_s_date = %s,
             doc_s_range = %s,
             doc_s_outcomes = %s
         WHERE doc_s_no = %s
         """
-        cur.execute(edit_doc_summary, (pname, pteam, psummary, pstart, pend, prange, poutcomes, doc_s_no))
+        cur.execute(edit_doc_summary, (pname, pteam, psummary, pstart, pend, add_date, prange, poutcomes, doc_s_no))
         connection.commit()
         return True
     except Exception as e:
@@ -107,7 +108,7 @@ def add_overview_document(pname, pteam, poverview, poutcomes, pgoals, pstart, pe
 
 # 프로젝트 개요서 상세본을 수정하는 함수
 # 수정하려는 프로젝트 개요서 상세본의 내용과 산출물 번호를 매개 변수로 받는다
-def edit_overview_document(pname, pteam, psummary, poverview, poutcomes, pgoals, pstart, pend, prange, pstack, doc_s_no):
+def edit_overview_document(pname, pteam, poverview, poutcomes, pgoals, pstart, pend, prange, pstack, add_date, doc_s_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -123,9 +124,10 @@ def edit_overview_document(pname, pteam, psummary, poverview, poutcomes, pgoals,
             doc_s_stack = %s,
             doc_s_start = %s,
             doc_s_end = %s,
+            doc_s_date = %s
         WHERE doc_s_no = %s
         """
-        cur.execute(edit_doc_overview, (pname, poverview, pgoals, prange, poutcomes, pteam, pstack, pstart, pend, doc_s_no))
+        cur.execute(edit_doc_overview, (pname, poverview, pgoals, prange, poutcomes, pteam, pstack, pstart, pend, add_date, doc_s_no))
         connection.commit()
         return True
     except Exception as e:
