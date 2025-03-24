@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2025/03/07
+    마지막 수정 날짜 : 2025/03/24
 """
 
 import pymysql
@@ -20,7 +20,12 @@ def insert_user(payload, Token):
         # 매개변수 바인딩 방식으로 안전하게 값 전달
         cur.execute(add_student, (payload.univ_id, payload.id, payload.pw, payload.name, payload.email, Token, payload.department))
         connection.commit()
-        return True
+        result = {
+            "s_no": payload.univ_id,
+            "s_name": payload.name,
+            "s_token": Token
+        }
+        return result
     except Exception as e:
         connection.rollback()
         print(f"Error [insert_user] : {e}")
@@ -57,7 +62,9 @@ def save_signin_user_token(id, Token):
     try:
         cur.execute("UPDATE student SET s_token = %s WHERE s_id = %s", (Token, id))
         connection.commit()
-        return True
+        cur.execute("SELECT s_no, s_name, s_token FROM student WHERE s_id = %s", (id,))
+        result = cur.fetchone()
+        return result
     except Exception as e:
         connection.rollback()
         print(f"Error [save_signin_user_token] : {e}")
@@ -191,7 +198,9 @@ def save_signin_professor_token(id, Token):
     try:
         cur.execute("UPDATE professor SET f_token = %s WHERE f_id = %s", (Token, id))
         connection.commit()
-        return True
+        cur.execute("SELECT f_no, f_name, f_token FROM professor WHERE f_id = %s", (id,))
+        result = cur.fetchone()
+        return result
     except Exception as e:
         connection.rollback()
         print(f"Error [save_signin_professor_token] : {e}")
