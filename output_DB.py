@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/03/24
+    마지막 수정 날짜 : 2025/03/26
 """
 
 import pymysql
@@ -71,7 +71,7 @@ def fetch_all_summary_documents(pid):
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cur.execute("SELECT * FROM doc_summary WHERE doc_s_outcomes IS NOT NULL AND p_no = %s", (pid,))
+        cur.execute("SELECT * FROM doc_summary WHERE doc_s_stack IS NULL AND p_no = %s", (pid,))
         result = cur.fetchall()
         return result
     except Exception as e:
