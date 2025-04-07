@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : account_DB.py
-    마지막 수정 날짜 : 2025/03/24
+    마지막 수정 날짜 : 2025/04/07
 """
 
 import pymysql
@@ -348,6 +348,42 @@ def edit_user_pw(univ_id, pw):
     except Exception as e:
         connection.rollback()
         print(f"Error [edit_user_pw] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# ------------------------------ 계정 정보 조회 및 수정 ------------------------------ #
+# 사용자(학생)의 정보를 조회하는 함수
+# 학번을 매개 변수로 받는다
+def fetch_student_info(univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM student WHERE s_no = %s", (univ_id,))
+        result = cur.fetchone()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_student_info] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 사용자(학생)의 계정 정보를 수정하는 함수
+# 수정하려는 비밀번호, 이메일, 학과와 수정하려는 사용자(학생)의 학번을 매개 변수로 받는다
+def edit_student_info(pw, email, dno, univ_id):
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("UPDATE student SET s_pw = %s, s_email = %s, dno = %s WHERE s_no = %s", (pw, email, dno, univ_id))
+        connection.commit()
+        return True
+    except Exception as e:
+        connection.rollback()
+        print(f"Error [edit_student_info] : {e}")
         return e
     finally:
         cur.close()
