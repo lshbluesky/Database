@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : project_DB.py
-    마지막 수정 날짜 : 2025/03/19
+    마지막 수정 날짜 : 2025/04/13
 """
 
 import pymysql
@@ -384,6 +384,23 @@ def fetch_project_for_LLM(pid):
         return json.dumps(project_data, ensure_ascii=False, default=str)
     except Exception as e:
         print(f"Error [fetch_project_for_LLM] : {e}")
+        return e
+    finally:
+        cur.close()
+        connection.close()
+
+# 현재 날짜 기준으로 프로젝트 종료일이 지난 프로젝트의 정보를 조회하는 함수
+# 매개 변수는 없다
+def fetch_expired_projects():
+    connection = db_connect()
+    cur = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        cur.execute("SELECT * FROM project WHERE p_end < CURDATE()")
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        print(f"Error [fetch_expired_projects] : {e}")
         return e
     finally:
         cur.close()
