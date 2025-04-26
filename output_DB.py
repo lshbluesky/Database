@@ -1,7 +1,7 @@
 """
     CodeCraft PMS Project
     파일명 : output_DB.py
-    마지막 수정 날짜 : 2025/03/26
+    마지막 수정 날짜 : 2025/04/26
 """
 
 import pymysql
@@ -339,7 +339,7 @@ def add_reqspec(feature_name, description, priority, non_functional_requirement_
 
 # 요구사항 명세서를 수정하는 함수
 # 수정하려는 요구사항 명세서의 내용과 산출물 번호를 매개 변수로 받는다
-def edit_reqspec(feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, add_date, doc_r_no):
+def edit_reqspec(feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, doc_r_date, doc_r_no):
     connection = db_connect()
     cur = connection.cursor(pymysql.cursors.DictCursor)
 
@@ -357,7 +357,7 @@ def edit_reqspec(feature_name, description, priority, non_functional_requirement
             doc_r_date = %s
         WHERE doc_r_no = %s
         """
-        cur.execute(edit_doc_require, (feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, add_date, doc_r_no))
+        cur.execute(edit_doc_require, (feature_name, description, priority, non_functional_requirement_name, non_functional_description, non_functional_priority, system_item, system_description, doc_r_date, doc_r_no))
         connection.commit()
         return True
     except Exception as e:
