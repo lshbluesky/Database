@@ -7,7 +7,7 @@
 ## 📖 프로젝트 소개
 - **팀 이름 :** CodeCraft
 - **프로젝트명 :** 대학생을 위한 웹 기반의 Project Management System(PMS)
-- **프로젝트 기간 :** 2024-09-01 ~ 2025-05-27
+- **프로젝트 기간 :** 2024-08-12 ~ 2025-05-27
 - **프로젝트 형태 :** [3학년 2학기 ~ 4학년 1학기] 졸업작품 캡스톤 디자인 팀 프로젝트
 - **프로젝트 설명**
   - PMS(Project Management System)는 프로젝트를 체계적으로 관리하고 성공적으로 수행할 수 있도록 돕는 소프트웨어를 의미합니다.
@@ -58,7 +58,7 @@
 - **OS :** Ubuntu 24.04 LTS
 - **Container :** Docker, Portainer
 - **개발 언어 :** Python, TypeScript
-- **라이브러리/프레임워크 :** React, Next.JS, Axios, Fast-API
+- **라이브러리/프레임워크 :** React, Next.JS, Axios, FastAPI
 - **데이터베이스 :** MySQL
 - **IDE :** Microsoft Visual Studio Code, Code-Server
 - **버전 및 형상 관리 :** GitHub Desktop, VMware Snapshot Backup
@@ -69,7 +69,7 @@
 
 - **Server OS :** Ubuntu 24.04 LTS
 - **Front-End :** TypeScript, React, Next.JS, Axios
-- **Back-End :** Python, Fast-API, Docker, Portainer
+- **Back-End :** Python, FastAPI, Docker, Portainer
 - **DataBase :** MySQL, 절차형 SQL(Procedure, Function), 옵티마이저 힌트 및 인덱스
 - **LLM(AI) :** Google Gemini 2.0 Flash
 
